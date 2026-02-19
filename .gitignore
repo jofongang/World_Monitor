@@ -2,3 +2,6 @@ nul
 backend/venv/
 frontend/.next/
 frontend/node_modules/
+# Python cache
+__pycache__/
+*.pyc
