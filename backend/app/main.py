@@ -10,15 +10,18 @@ from pathlib import Path
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.market_service import MarketService
 from app.news_service import NewsService
 
 NEWS_CONFIG_PATH = Path(__file__).with_name("news_sources.json")
 news_service = NewsService(config_path=NEWS_CONFIG_PATH)
+market_service = MarketService()
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     await news_service.start()
+    market_service.refresh(force=True)
     try:
         yield
     finally:
@@ -40,16 +43,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MOCK_MARKETS = [
-    {"symbol": "SPX", "name": "S&P 500", "price": 5842.50, "change_pct": 1.23},
-    {"symbol": "DJI", "name": "Dow Jones", "price": 43150.75, "change_pct": 0.87},
-    {"symbol": "IXIC", "name": "NASDAQ", "price": 18920.30, "change_pct": -0.45},
-    {"symbol": "FTSE", "name": "FTSE 100", "price": 8234.10, "change_pct": 0.32},
-    {"symbol": "N225", "name": "Nikkei 225", "price": 38450.00, "change_pct": -1.12},
-    {"symbol": "BTC", "name": "Bitcoin", "price": 97250.00, "change_pct": 2.85},
-    {"symbol": "GC", "name": "Gold", "price": 2945.30, "change_pct": 0.15},
-    {"symbol": "CL", "name": "Crude Oil", "price": 78.42, "change_pct": -0.68},
-]
 
 @app.get("/health")
 def health_check() -> dict[str, str]:
@@ -63,4 +56,15 @@ def get_news(refresh: int = Query(default=0, ge=0, le=1)) -> dict:
 
 @app.get("/markets")
 def get_markets() -> dict[str, list[dict]]:
-    return {"items": MOCK_MARKETS}
+    return market_service.get_markets()
+
+
+@app.get("/markets/history")
+def get_markets_history(
+    range_key: str = Query(
+        default="1m",
+        alias="range",
+        pattern="^(24h|7d|1m|6m|1y|5y)$",
+    )
+) -> dict:
+    return market_service.get_market_history(range_key=range_key)
