@@ -1,0 +1,43 @@
+{
+  "sources": [
+    {
+      "name": "BBC World",
+      "urls": [
+        "https://feeds.bbci.co.uk/news/world/rss.xml"
+      ]
+    },
+    {
+      "name": "Al Jazeera English",
+      "urls": [
+        "https://www.aljazeera.com/xml/rss/all.xml"
+      ]
+    },
+    {
+      "name": "UN News",
+      "urls": [
+        "https://news.un.org/feed/subscribe/en/news/all/rss.xml"
+      ]
+    },
+    {
+      "name": "IMF News",
+      "urls": [
+        "https://www.imf.org/en/News/RSS",
+        "https://www.imf.org/en/News/rss"
+      ]
+    },
+    {
+      "name": "World Bank News",
+      "urls": [
+        "https://search.worldbank.org/api/v2/news?format=atom",
+        "https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US"
+      ]
+    },
+    {
+      "name": "AfDB News",
+      "urls": [
+        "https://www.afdb.org/en/rss-feeds/news-events",
+        "https://www.afdb.org/en/news-and-events/rss"
+      ]
+    }
+  ]
+}

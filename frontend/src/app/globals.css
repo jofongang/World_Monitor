@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/* ===================================================================
+   World Monitor — Batman Command-Center Theme
+   =================================================================== */
+
+@theme inline {
+  /* ── Core palette ─────────────────────────────────────────────── */
+  --color-background: #070A12;
+  --color-panel: #0B1020;
+  --color-panel-hover: #101830;
+  --color-border: #1A2744;
+  --color-border-glow: rgba(45, 123, 255, 0.13);
+  --color-accent: #2D7BFF;
+  --color-accent-dim: #1A4F99;
+  --color-foreground: #E6E9F2;
+  --color-muted: #7A8BA8;
+  --color-positive: #00E676;
+  --color-negative: #FF1744;
+  --color-warning: #FFD600;
+
+  /* ── Fonts ────────────────────────────────────────────────────── */
+  --font-sans: var(--font-geist-sans), "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), "JetBrains Mono", "Fira Code",
+    "Cascadia Code", monospace;
+}
+
+/* ── Base styles ────────────────────────────────────────────────── */
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* ── Subtle scanline overlay ────────────────────────────────────── */
+.scanline-overlay {
+  position: relative;
+}
+.scanline-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(45, 123, 255, 0.012) 2px,
+    rgba(45, 123, 255, 0.012) 4px
+  );
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* ── Subtle grid overlay ───────────────────────────────────────── */
+.grid-overlay {
+  background-image: linear-gradient(
+      rgba(45, 123, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(45, 123, 255, 0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Glow border utility ───────────────────────────────────────── */
+.glow-border {
+  border: 1px solid var(--color-border);
+  box-shadow:
+    0 0 8px var(--color-border-glow),
+    inset 0 0 8px var(--color-border-glow);
+}
+
+/* ── Custom scrollbar for dark theme ───────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-dim);
+}
+
+/* ── Selection color ───────────────────────────────────────────── */
+::selection {
+  background: rgba(45, 123, 255, 0.3);
+  color: var(--color-foreground);
+}
