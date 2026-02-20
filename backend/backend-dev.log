@@ -1,0 +1,125 @@
+INFO:     Will watch for changes in these directories: ['C:\\Users\\Admin\\OneDrive\\Documents\\World_Monitor\\backend']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [22400] using StatReload
+INFO:     Started server process [17540]
+INFO:     Waiting for application startup.
+Failed source 'UN News' URL 'https://news.un.org/feed/subscribe/en/news/all/rss.xml': not well-formed (invalid token): line 1, column 0
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+INFO:     Application startup complete.
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+INFO:     127.0.0.1:50358 - "GET /alerts?since_hours=24 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58669 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58670 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58673 - "GET /watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58674 - "GET /alerts?since_hours=24 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58678 - "POST /watchlist HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:58679 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58681 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53251 - "POST /watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53251 - "GET /alerts?since_hours=24 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52408 - "GET /brief?window=7d HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60991 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60994 - "GET /alerts?since_hours=24 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61002 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61007 - "GET /watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60996 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61010 - "GET /alerts?since_hours=24 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61016 - "POST /watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52453 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52455 - "GET /alerts?since_hours=24 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52457 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52461 - "GET /watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62273 - "GET /alerts?since_hours=168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57353 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49656 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49656 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56299 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56299 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49656 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55604 - "GET /markets/history?range=1m HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60009 - "GET /markets/history?range=1m HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49543 - "GET /watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52113 - "GET /watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57951 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55608 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52578 - "GET /alerts?since_hours=168 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58957 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50374 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65379 - "GET /alerts?since_hours=168 HTTP/1.1" 200 OK
+Failed source 'UN News' URL 'https://news.un.org/feed/subscribe/en/news/all/rss.xml': not well-formed (invalid token): line 1, column 0
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+Failed source 'UN News' URL 'https://news.un.org/feed/subscribe/en/news/all/rss.xml': not well-formed (invalid token): line 1, column 0
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'BBC World' URL 'https://feeds.bbci.co.uk/news/world/rss.xml': <urlopen error [Errno 11001] getaddrinfo failed>
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+WARNING:  StatReload detected changes in 'app\main.py'. Reloading...
+ INFO:     127.0.0.1:49313 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64873 - "GET /alerts?since_hours=168 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [17540]
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+INFO:     Started server process [23288]
+INFO:     Waiting for application startup.
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': HTTP Error 500: Internal Server Error
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+INFO:     Application startup complete.
+INFO:     127.0.0.1:64706 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49759 - "GET /videos?refresh=1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49767 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49769 - "GET /alerts?since_hours=24 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49772 - "GET /videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49773 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49776 - "GET /videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49208 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49210 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59985 - "GET /videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59687 - "GET /videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50976 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50976 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53517 - "GET /brief?window=24h HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53517 - "GET /watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50976 - "GET /watchlist HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57332 - "GET /markets/history?range=1m HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64145 - "GET /markets/history?range=1m HTTP/1.1" 200 OK

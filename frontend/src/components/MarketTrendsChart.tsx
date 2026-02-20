@@ -18,12 +18,19 @@ const RANGE_OPTIONS: Array<{ value: MarketHistoryRange; label: string }> = [
 ];
 
 const SERIES_COLORS: Record<string, string> = {
+  SPY: "#2D7BFF",
+  DIA: "#00E676",
+  QQQ: "#FFB300",
+  EWU: "#AB47BC",
+  EWJ: "#26C6DA",
+  GLD: "#FFD54F",
+  USO: "#EF5350",
+  BTC: "#FF6D00",
   SPX: "#2D7BFF",
   DJI: "#00E676",
   IXIC: "#FFB300",
   FTSE: "#AB47BC",
   N225: "#26C6DA",
-  BTC: "#FF6D00",
   GC: "#FFD54F",
   CL: "#EF5350",
 };
@@ -478,3 +485,4 @@ function formatPercent(value: number): string {
   const rounded = Math.abs(value) < 0.005 ? 0 : value;
   return `${rounded >= 0 ? "+" : ""}${rounded.toFixed(2)}%`;
 }
+

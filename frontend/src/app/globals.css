@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 /* ===================================================================
-   World Monitor — Batman Command-Center Theme
+   World Monitor â€” Batman Command-Center Theme
    =================================================================== */
 
 @theme inline {
-  /* ── Core palette ─────────────────────────────────────────────── */
+  /* â”€â”€ Core palette â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --color-background: #070A12;
   --color-panel: #0B1020;
   --color-panel-hover: #101830;
@@ -19,20 +19,20 @@
   --color-negative: #FF1744;
   --color-warning: #FFD600;
 
-  /* ── Fonts ────────────────────────────────────────────────────── */
+  /* â”€â”€ Fonts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --font-sans: var(--font-geist-sans), "Inter", "Segoe UI", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), "JetBrains Mono", "Fira Code",
     "Cascadia Code", monospace;
 }
 
-/* ── Base styles ────────────────────────────────────────────────── */
+/* â”€â”€ Base styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
 }
 
-/* ── Subtle scanline overlay ────────────────────────────────────── */
+/* â”€â”€ Subtle scanline overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .scanline-overlay {
   position: relative;
 }
@@ -51,7 +51,7 @@ body {
   z-index: 50;
 }
 
-/* ── Subtle grid overlay ───────────────────────────────────────── */
+/* â”€â”€ Subtle grid overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .grid-overlay {
   background-image: linear-gradient(
       rgba(45, 123, 255, 0.025) 1px,
@@ -61,7 +61,7 @@ body {
   background-size: 40px 40px;
 }
 
-/* ── Glow border utility ───────────────────────────────────────── */
+/* â”€â”€ Glow border utility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .glow-border {
   border: 1px solid var(--color-border);
   box-shadow:
@@ -69,7 +69,7 @@ body {
     inset 0 0 8px var(--color-border-glow);
 }
 
-/* ── Custom scrollbar for dark theme ───────────────────────────── */
+/* â”€â”€ Custom scrollbar for dark theme â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -85,8 +85,45 @@ body {
   background: var(--color-accent-dim);
 }
 
-/* ── Selection color ───────────────────────────────────────────── */
+/* â”€â”€ Selection color â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 ::selection {
   background: rgba(45, 123, 255, 0.3);
   color: var(--color-foreground);
+}
+
+/* Leaflet dark popup overrides */
+.leaflet-container {
+  background: #070a12;
+}
+
+.world-monitor-popup .leaflet-popup-content-wrapper,
+.leaflet-popup-content-wrapper {
+  background: #0b1020;
+  color: #e6e9f2;
+  border: 1px solid #1a2744;
+  box-shadow: 0 0 10px rgba(45, 123, 255, 0.25);
+}
+
+.world-monitor-popup .leaflet-popup-tip,
+.leaflet-popup-tip {
+  background: #0b1020;
+}
+
+.leaflet-popup-close-button {
+  color: #7a8ba8 !important;
+}
+
+.leaflet-popup-close-button:hover {
+  color: #2d7bff !important;
+}
+
+.leaflet-control-zoom a {
+  background: #0b1020 !important;
+  color: #e6e9f2 !important;
+  border-color: #1a2744 !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: #101830 !important;
+  color: #2d7bff !important;
 }

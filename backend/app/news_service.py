@@ -22,10 +22,13 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
+
+from app.geo_resolver import GeoResolver
 from urllib.request import Request, urlopen
 
 LOGGER = logging.getLogger(__name__)
 USER_AGENT = "WorldMonitor/0.2 (+http://localhost)"
+GEO_CENTROIDS_PATH = Path(__file__).resolve().parent / "data" / "country_centroids.json"
 
 HTML_TAG_RE = re.compile(r"<[^>]+>")
 NON_ALNUM_RE = re.compile(r"[^a-z0-9]+")
@@ -241,6 +244,7 @@ class NewsService:
     def __init__(self, config_path: Path) -> None:
         self.config_path = config_path
         self.sources = self._load_sources(config_path)
+        self.geo_resolver = GeoResolver(centroids_path=GEO_CENTROIDS_PATH)
 
         self.refresh_interval_minutes = max(1, int(os.getenv("NEWS_REFRESH_MINUTES", "10")))
         self.refresh_interval_seconds = self.refresh_interval_minutes * 60
@@ -387,6 +391,11 @@ class NewsService:
 
         output: list[dict[str, Any]] = []
         for index, item in enumerate(collected, start=1):
+            geo = self.geo_resolver.resolve(
+                country=item.get("country"),
+                region=item.get("region"),
+                text=item.get("_geo_text", ""),
+            )
             output.append(
                 {
                     "id": index,
@@ -395,8 +404,11 @@ class NewsService:
                     "url": item["url"],
                     "published_at": item["published_at"],
                     "category": item["category"],
-                    "region": item["region"],
-                    "country": item["country"],
+                    "region": geo["region"],
+                    "country": geo["country"],
+                    "lat": geo["lat"],
+                    "lon": geo["lon"],
+                    "location_label": geo["location_label"],
                 }
             )
         return output
@@ -467,6 +479,7 @@ class NewsService:
                     "category": category,
                     "region": region,
                     "country": country,
+                    "_geo_text": combined_text,
                     "_published_epoch": published_dt.timestamp(),
                     "_title_hash": hashlib.sha256(normalized_title.encode("utf-8")).hexdigest(),
                 }
@@ -592,3 +605,8 @@ def _utc_iso(value: datetime) -> str:
     return value.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace(
         "+00:00", "Z"
     )
+
+
+
+
+

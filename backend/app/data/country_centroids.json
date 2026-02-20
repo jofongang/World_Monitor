@@ -1,0 +1,196 @@
+{
+  "countries": [
+    {
+      "country": "United States",
+      "iso2": "US",
+      "region": "North America",
+      "lat": 39.8283,
+      "lon": -98.5795,
+      "aliases": ["united states", "usa", "us", "american"]
+    },
+    {
+      "country": "Canada",
+      "iso2": "CA",
+      "region": "North America",
+      "lat": 56.1304,
+      "lon": -106.3468,
+      "aliases": ["canada", "canadian"]
+    },
+    {
+      "country": "United Kingdom",
+      "iso2": "GB",
+      "region": "Europe",
+      "lat": 55.3781,
+      "lon": -3.436,
+      "aliases": ["united kingdom", "uk", "britain", "british"]
+    },
+    {
+      "country": "France",
+      "iso2": "FR",
+      "region": "Europe",
+      "lat": 46.2276,
+      "lon": 2.2137,
+      "aliases": ["france", "french"]
+    },
+    {
+      "country": "Germany",
+      "iso2": "DE",
+      "region": "Europe",
+      "lat": 51.1657,
+      "lon": 10.4515,
+      "aliases": ["germany", "german"]
+    },
+    {
+      "country": "Nigeria",
+      "iso2": "NG",
+      "region": "Africa",
+      "lat": 9.082,
+      "lon": 8.6753,
+      "aliases": ["nigeria", "nigerian"]
+    },
+    {
+      "country": "Ghana",
+      "iso2": "GH",
+      "region": "Africa",
+      "lat": 7.9465,
+      "lon": -1.0232,
+      "aliases": ["ghana", "ghanaian"]
+    },
+    {
+      "country": "Kenya",
+      "iso2": "KE",
+      "region": "Africa",
+      "lat": -0.0236,
+      "lon": 37.9062,
+      "aliases": ["kenya", "kenyan"]
+    },
+    {
+      "country": "South Africa",
+      "iso2": "ZA",
+      "region": "Africa",
+      "lat": -30.5595,
+      "lon": 22.9375,
+      "aliases": ["south africa", "south african"]
+    },
+    {
+      "country": "Egypt",
+      "iso2": "EG",
+      "region": "Middle East",
+      "lat": 26.8206,
+      "lon": 30.8025,
+      "aliases": ["egypt", "egyptian"]
+    },
+    {
+      "country": "Saudi Arabia",
+      "iso2": "SA",
+      "region": "Middle East",
+      "lat": 23.8859,
+      "lon": 45.0792,
+      "aliases": ["saudi arabia", "saudi"]
+    },
+    {
+      "country": "United Arab Emirates",
+      "iso2": "AE",
+      "region": "Middle East",
+      "lat": 23.4241,
+      "lon": 53.8478,
+      "aliases": ["united arab emirates", "uae"]
+    },
+    {
+      "country": "China",
+      "iso2": "CN",
+      "region": "Asia",
+      "lat": 35.8617,
+      "lon": 104.1954,
+      "aliases": ["china", "chinese"]
+    },
+    {
+      "country": "Japan",
+      "iso2": "JP",
+      "region": "Asia",
+      "lat": 36.2048,
+      "lon": 138.2529,
+      "aliases": ["japan", "japanese"]
+    },
+    {
+      "country": "India",
+      "iso2": "IN",
+      "region": "Asia",
+      "lat": 20.5937,
+      "lon": 78.9629,
+      "aliases": ["india", "indian"]
+    },
+    {
+      "country": "Brazil",
+      "iso2": "BR",
+      "region": "Latin America",
+      "lat": -14.235,
+      "lon": -51.9253,
+      "aliases": ["brazil", "brazilian"]
+    },
+    {
+      "country": "Australia",
+      "iso2": "AU",
+      "region": "Oceania",
+      "lat": -25.2744,
+      "lon": 133.7751,
+      "aliases": ["australia", "australian"]
+    },
+    {
+      "country": "Russia",
+      "iso2": "RU",
+      "region": "Europe",
+      "lat": 61.524,
+      "lon": 105.3188,
+      "aliases": ["russia", "russian"]
+    },
+    {
+      "country": "Ukraine",
+      "iso2": "UA",
+      "region": "Europe",
+      "lat": 48.3794,
+      "lon": 31.1656,
+      "aliases": ["ukraine", "ukrainian"]
+    },
+    {
+      "country": "Israel",
+      "iso2": "IL",
+      "region": "Middle East",
+      "lat": 31.0461,
+      "lon": 34.8516,
+      "aliases": ["israel", "israeli"]
+    },
+    {
+      "country": "Iran",
+      "iso2": "IR",
+      "region": "Middle East",
+      "lat": 32.4279,
+      "lon": 53.688,
+      "aliases": ["iran", "iranian"]
+    },
+    {
+      "country": "Turkey",
+      "iso2": "TR",
+      "region": "Middle East",
+      "lat": 38.9637,
+      "lon": 35.2433,
+      "aliases": ["turkey", "turkish"]
+    },
+    {
+      "country": "Ethiopia",
+      "iso2": "ET",
+      "region": "Africa",
+      "lat": 9.145,
+      "lon": 40.4897,
+      "aliases": ["ethiopia", "ethiopian"]
+    },
+    {
+      "country": "Democratic Republic of the Congo",
+      "iso2": "CD",
+      "region": "Africa",
+      "lat": -4.0383,
+      "lon": 21.7587,
+      "aliases": ["democratic republic of the congo", "drc", "congo kinshasa"]
+    }
+  ]
+}

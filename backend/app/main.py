@@ -1,4 +1,4 @@
-"""
+﻿"""
 World Monitor backend API.
 
 Step 2 adds real RSS ingestion with caching and refresh controls.
@@ -6,22 +6,41 @@ Step 2 adds real RSS ingestion with caching and refresh controls.
 
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.alert_service import AlertService
+from app.brief_service import BriefService
 from app.market_service import MarketService
 from app.news_service import NewsService
+from app.video_service import VideoService
+from app.watchlist_service import WatchlistService
 
 NEWS_CONFIG_PATH = Path(__file__).with_name("news_sources.json")
+WATCHLIST_PATH = Path(__file__).resolve().parent / "data" / "watchlist.json"
+
 news_service = NewsService(config_path=NEWS_CONFIG_PATH)
 market_service = MarketService()
+video_service = VideoService()
+watchlist_service = WatchlistService(storage_path=WATCHLIST_PATH)
+alert_service = AlertService(
+    news_service=news_service,
+    watchlist_service=watchlist_service,
+)
+brief_service = BriefService(
+    news_service=news_service,
+    market_service=market_service,
+    alert_service=alert_service,
+)
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     await news_service.start()
     market_service.refresh(force=True)
+    video_service.refresh(force=True)
     try:
         yield
     finally:
@@ -31,7 +50,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(
     title="World Monitor API",
     description="Global intelligence command center backend",
-    version="0.2.0",
+    version="0.6.0",
     lifespan=lifespan,
 )
 
@@ -49,13 +68,23 @@ def health_check() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/health/providers")
+def provider_health() -> dict[str, dict[str, object]]:
+    return market_service.get_provider_health()
+
+
 @app.get("/news")
 def get_news(refresh: int = Query(default=0, ge=0, le=1)) -> dict:
     return news_service.get_news(force_refresh=bool(refresh))
 
 
+@app.get("/videos")
+def get_videos(refresh: int = Query(default=0, ge=0, le=1)) -> list[dict[str, Any]]:
+    return video_service.get_videos(force_refresh=bool(refresh))
+
+
 @app.get("/markets")
-def get_markets() -> dict[str, list[dict]]:
+def get_markets() -> list[dict[str, Any]]:
     return market_service.get_markets()
 
 
@@ -68,3 +97,25 @@ def get_markets_history(
     )
 ) -> dict:
     return market_service.get_market_history(range_key=range_key)
+
+
+@app.get("/watchlist")
+def get_watchlist() -> dict[str, list[str]]:
+    return watchlist_service.get_watchlist()
+
+
+@app.post("/watchlist")
+def update_watchlist(payload: dict[str, Any]) -> dict[str, list[str]]:
+    return watchlist_service.update_watchlist(payload)
+
+
+@app.get("/alerts")
+def get_alerts(since_hours: int = Query(default=24, ge=1, le=24 * 30)) -> dict[str, Any]:
+    return alert_service.get_alerts(since_hours=since_hours)
+
+
+@app.get("/brief")
+def get_brief(
+    window: str = Query(default="24h", pattern="^(24h|7d)$")
+) -> dict[str, Any]:
+    return brief_service.get_brief(window=window)

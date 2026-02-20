@@ -1,7 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { fetchNews, type NewsItem } from "@/lib/api";
+import type { NewsItem } from "@/lib/api";
+
+type NewsPanelProps = {
+  items: NewsItem[];
+  lastUpdated: string | null;
+  loading: boolean;
+  refreshing: boolean;
+  error: string | null;
+  onRefresh: () => void;
+};
 
 const CATEGORY_COLORS: Record<string, string> = {
   politics: "bg-accent/20 text-accent",
@@ -49,41 +57,17 @@ function formatLastUpdated(value: string | null): string {
   });
 }
 
-export default function NewsPanel() {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadNews = useCallback(async (forceRefresh: boolean) => {
-    if (forceRefresh) {
-      setRefreshing(true);
-    } else {
-      setLoading(true);
-    }
-
-    try {
-      setError(null);
-      const payload = await fetchNews({ refresh: forceRefresh });
-      setNews(payload.items);
-      setLastUpdated(payload.last_updated);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Unexpected error";
-      setError(message);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void loadNews(false);
-  }, [loadNews]);
-
+export default function NewsPanel({
+  items,
+  lastUpdated,
+  loading,
+  refreshing,
+  error,
+  onRefresh,
+}: NewsPanelProps) {
   if (loading) return <PanelSkeleton />;
-  if (error && news.length === 0) {
-    return <PanelError message={error} onRetry={() => void loadNews(true)} />;
+  if (error && items.length === 0) {
+    return <PanelError message={error} onRetry={onRefresh} />;
   }
 
   return (
@@ -94,14 +78,14 @@ export default function NewsPanel() {
         </h2>
         <div className="flex items-center gap-3">
           <span className="text-muted font-mono text-[10px] tracking-wider whitespace-nowrap">
-            {news.length} SIGNALS
+            {items.length} SIGNALS
           </span>
           <span className="text-muted/80 font-mono text-[10px] tracking-wider whitespace-nowrap">
             Last updated: {formatLastUpdated(lastUpdated)}
           </span>
           <button
             type="button"
-            onClick={() => void loadNews(true)}
+            onClick={onRefresh}
             disabled={refreshing}
             className="text-[10px] font-mono uppercase tracking-widest px-2.5 py-1 rounded border border-accent/40 text-accent hover:bg-accent/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
@@ -112,21 +96,19 @@ export default function NewsPanel() {
 
       {error ? (
         <div className="mb-3 rounded border border-warning/30 bg-warning/5 p-2">
-          <p className="text-warning text-[11px] font-mono">
-            Refresh failed: {error}
-          </p>
+          <p className="text-warning text-[11px] font-mono">Refresh failed: {error}</p>
         </div>
       ) : null}
 
       <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-        {news.length === 0 ? (
+        {items.length === 0 ? (
           <div className="rounded-md border border-border bg-background/40 p-4">
             <p className="text-muted text-xs font-mono">
-              No stories available yet. Try Refresh in a moment.
+              No stories match current filters.
             </p>
           </div>
         ) : (
-          news.map((item) => (
+          items.map((item) => (
             <article
               key={item.id}
               className="bg-background/50 border border-border rounded-md p-3 hover:border-accent/30 transition-colors group"
@@ -156,6 +138,12 @@ export default function NewsPanel() {
                 <span>{item.region}</span>
                 <span className="text-border">|</span>
                 <span>{item.country}</span>
+                {item.location_label ? (
+                  <>
+                    <span className="text-border">|</span>
+                    <span>{item.location_label}</span>
+                  </>
+                ) : null}
                 <span className="ml-auto text-muted/50">
                   {formatRelativeTime(item.published_at)}
                 </span>
@@ -179,10 +167,7 @@ function PanelSkeleton() {
       </div>
       <div className="space-y-2">
         {Array.from({ length: 5 }, (_, i) => (
-          <div
-            key={i}
-            className="bg-background/30 rounded-md h-[72px] animate-pulse"
-          />
+          <div key={i} className="bg-background/30 rounded-md h-[72px] animate-pulse" />
         ))}
       </div>
     </div>
@@ -202,9 +187,7 @@ function PanelError({
         Intel Feed
       </h2>
       <div className="bg-negative/5 border border-negative/30 rounded-md p-4">
-        <p className="text-negative text-sm font-mono font-bold">
-          CONNECTION ERROR
-        </p>
+        <p className="text-negative text-sm font-mono font-bold">CONNECTION ERROR</p>
         <p className="text-muted text-xs font-mono mt-2">{message}</p>
         <button
           type="button"

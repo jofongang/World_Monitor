@@ -1,0 +1,88 @@
+INFO:     Started server process [6284]
+INFO:     Waiting for application startup.
+Failed source 'UN News' URL 'https://news.un.org/feed/subscribe/en/news/all/rss.xml': not well-formed (invalid token): line 1, column 0
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+INFO:     127.0.0.1:64061 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64061 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64061 - "GET /health/providers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64061 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64061 - "GET /markets/history?range=1m HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50424 - "GET /health/providers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50427 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50418 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57367 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57370 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57357 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57357 - "GET /health/providers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57357 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60714 - "GET /news HTTP/1.1" 200 OK
+Failed source 'UN News' URL 'https://news.un.org/feed/subscribe/en/news/all/rss.xml': not well-formed (invalid token): line 1, column 0
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+INFO:     127.0.0.1:54912 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54914 - "GET /health/providers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54915 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55162 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55164 - "GET /health/providers HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55166 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59828 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56843 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52059 - "GET /markets HTTP/1.1" 200 OK
+Failed source 'UN News' URL 'https://news.un.org/feed/subscribe/en/news/all/rss.xml': not well-formed (invalid token): line 1, column 0
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+INFO:     127.0.0.1:64685 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56803 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51550 - "GET /markets/history?range=1m HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49673 - "GET /markets/history?range=1m HTTP/1.1" 200 OK
+Failed source 'UN News' URL 'https://news.un.org/feed/subscribe/en/news/all/rss.xml': not well-formed (invalid token): line 1, column 0
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+Failed source 'UN News' URL 'https://news.un.org/feed/subscribe/en/news/all/rss.xml': not well-formed (invalid token): line 1, column 0
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+Failed source 'UN News' URL 'https://news.un.org/feed/subscribe/en/news/all/rss.xml': not well-formed (invalid token): line 1, column 0
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/RSS'
+No parseable entries from source 'IMF News' URL 'https://www.imf.org/en/News/rss'
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom': unbound prefix: line 8, column 4
+Failed source 'World Bank News' URL 'https://search.worldbank.org/api/v2/news?format=atom&countrycode_exact=US': unbound prefix: line 8, column 4
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/rss-feeds/news-events': HTTP Error 403: Forbidden
+Failed source 'AfDB News' URL 'https://www.afdb.org/en/news-and-events/rss': HTTP Error 403: Forbidden
+INFO:     127.0.0.1:60299 - "GET /alerts?since_hours=24 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60302 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60304 - "GET /alerts?since_hours=24 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60306 - "POST /watchlist HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60309 - "GET /watchlist HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60311 - "GET /brief?window=24h HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60502 - "GET /alerts?since_hours=168 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60989 - "GET /alerts?since_hours=168 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55600 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57254 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62240 - "GET /news HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64345 - "GET /markets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56239 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64876 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64878 - "GET /news HTTP/1.1" 200 OK
