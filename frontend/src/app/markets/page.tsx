@@ -1,19 +1,21 @@
 import MarketTrendsChart from "@/components/MarketTrendsChart";
 import MarketsPanel from "@/components/MarketsPanel";
+import Panel from "@/components/ui/Panel";
 
 export default function MarketsPage() {
   return (
     <div className="space-y-4">
-      <div className="glow-border rounded-lg bg-panel p-4">
-        <h2 className="text-accent font-mono text-lg font-bold tracking-widest uppercase">
-          Markets Overview
-        </h2>
-        <p className="text-muted text-xs font-mono mt-1">
-          Live watchlist and multi-range market trend graph
+      <Panel
+        title="Markets Overview"
+        subtitle="Live watchlist plus multi-range trend graph."
+        contentClassName="px-4 pb-4"
+      >
+        <p className="text-xs text-muted font-mono">
+          Green signals positive momentum, red signals downside pressure.
         </p>
-      </div>
+      </Panel>
 
-      <div className="grid grid-cols-1 xl:grid-cols-[380px,1fr] gap-4 items-start">
+      <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[380px,1fr]">
         <MarketsPanel />
         <MarketTrendsChart />
       </div>

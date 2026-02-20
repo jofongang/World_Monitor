@@ -1,5 +1,6 @@
 "use client";
 
+import Panel from "@/components/ui/Panel";
 import type { NewsItem } from "@/lib/api";
 
 type NewsPanelProps = {
@@ -9,31 +10,33 @@ type NewsPanelProps = {
   refreshing: boolean;
   error: string | null;
   onRefresh: () => void;
+  selectedNewsId: number | null;
+  onSelectNews: (id: number) => void;
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  politics: "bg-accent/20 text-accent",
-  geopolitics: "bg-blue-500/20 text-blue-300",
-  economy: "bg-positive/20 text-positive",
-  markets: "bg-emerald-500/20 text-emerald-300",
-  conflict: "bg-negative/20 text-negative",
-  energy: "bg-warning/20 text-warning",
-  infrastructure: "bg-cyan-500/20 text-cyan-300",
+  politics: "bg-accent/20 text-accent border border-accent/30",
+  geopolitics: "bg-accent-soft/15 text-accent-soft border border-accent-soft/30",
+  economy: "bg-positive/15 text-positive border border-positive/35",
+  markets: "bg-positive/15 text-positive border border-positive/35",
+  conflict: "bg-danger/20 text-danger border border-danger/45",
+  energy: "bg-warning/18 text-warning border border-warning/38",
+  infrastructure: "bg-accent/20 text-accent border border-accent/30",
 };
 
 function getCategoryStyle(category: string): string {
-  return CATEGORY_COLORS[category.toLowerCase()] ?? "bg-muted/20 text-muted";
+  return CATEGORY_COLORS[category.toLowerCase()] ?? "bg-muted/20 text-muted border border-border";
 }
 
 function formatRelativeTime(dateStr: string): string {
   const date = new Date(dateStr);
-  if (Number.isNaN(date.getTime())) return "Unknown";
+  if (Number.isNaN(date.getTime())) return "unknown";
 
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
-  if (diffMinutes < 1) return "< 1m ago";
+  if (diffMinutes < 1) return "<1m ago";
   if (diffMinutes < 60) return `${diffMinutes}m ago`;
   const diffHours = Math.floor(diffMinutes / 60);
   if (diffHours < 24) return `${diffHours}h ago`;
@@ -46,7 +49,6 @@ function formatLastUpdated(value: string | null): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Unknown";
   return date.toLocaleString("en-US", {
-    year: "numeric",
     month: "short",
     day: "2-digit",
     hour: "2-digit",
@@ -64,6 +66,8 @@ export default function NewsPanel({
   refreshing,
   error,
   onRefresh,
+  selectedNewsId,
+  onSelectNews,
 }: NewsPanelProps) {
   if (loading) return <PanelSkeleton />;
   if (error && items.length === 0) {
@@ -71,132 +75,131 @@ export default function NewsPanel({
   }
 
   return (
-    <div className="glow-border rounded-lg bg-panel p-4 flex flex-col">
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <h2 className="text-accent font-mono text-sm font-bold tracking-widest uppercase">
-          Intel Feed
-        </h2>
-        <div className="flex items-center gap-3">
-          <span className="text-muted font-mono text-[10px] tracking-wider whitespace-nowrap">
-            {items.length} SIGNALS
-          </span>
-          <span className="text-muted/80 font-mono text-[10px] tracking-wider whitespace-nowrap">
-            Last updated: {formatLastUpdated(lastUpdated)}
+    <Panel
+      title="Intel Feed"
+      subtitle={`Last updated ${formatLastUpdated(lastUpdated)}`}
+      rightSlot={
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono text-muted tracking-wider">
+            {items.length} signals
           </span>
           <button
             type="button"
             onClick={onRefresh}
             disabled={refreshing}
-            className="text-[10px] font-mono uppercase tracking-widest px-2.5 py-1 rounded border border-accent/40 text-accent hover:bg-accent/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="rounded border border-accent/40 px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-accent hover:bg-accent/10 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {refreshing ? "Refreshing..." : "Refresh"}
+            {refreshing ? "Refreshing" : "Refresh"}
           </button>
         </div>
-      </div>
-
+      }
+      className="h-full min-h-[320px] xl:min-h-[340px]"
+      contentClassName="px-4 pb-4"
+    >
       {error ? (
-        <div className="mb-3 rounded border border-warning/30 bg-warning/5 p-2">
-          <p className="text-warning text-[11px] font-mono">Refresh failed: {error}</p>
+        <div className="mb-2 rounded border border-warning/35 bg-warning/10 p-2">
+          <p className="text-warning text-[11px] font-mono">Refresh warning: {error}</p>
         </div>
       ) : null}
 
-      <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+      <div className="terminal-scroll space-y-2 max-h-[330px] overflow-y-auto pr-1">
         {items.length === 0 ? (
-          <div className="rounded-md border border-border bg-background/40 p-4">
+          <div className="rounded-md border border-border bg-background/45 p-4">
             <p className="text-muted text-xs font-mono">
-              No stories match current filters.
+              No stories match active controls.
             </p>
           </div>
         ) : (
-          items.map((item) => (
-            <article
-              key={item.id}
-              className="bg-background/50 border border-border rounded-md p-3 hover:border-accent/30 transition-colors group"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-sm text-foreground font-medium leading-snug group-hover:text-accent transition-colors"
-                >
-                  {item.title}
-                </a>
-                <div className="flex items-center gap-1.5">
-                  <span
-                    className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${getCategoryStyle(item.category)}`}
+          items.map((item) => {
+            const selected = selectedNewsId === item.id;
+            return (
+              <article
+                key={item.id}
+                className={`rounded-md border p-3 transition-colors ${
+                  selected
+                    ? "border-warning/55 bg-warning/10"
+                    : "border-border bg-background/45 hover:border-accent/38"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onSelectNews(item.id)}
+                    className="text-left text-sm text-foreground leading-snug hover:text-accent transition-colors"
                   >
-                    {item.category.toUpperCase()}
-                  </span>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full whitespace-nowrap bg-accent/10 text-accent/80 border border-accent/20">
-                    SOURCE: {item.source}
+                    {item.title}
+                  </button>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide ${getCategoryStyle(item.category)}`}
+                  >
+                    {item.category}
                   </span>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2 mt-2 text-[11px] text-muted font-mono">
-                <span>{item.region}</span>
-                <span className="text-border">|</span>
-                <span>{item.country}</span>
-                {item.location_label ? (
-                  <>
-                    <span className="text-border">|</span>
-                    <span>{item.location_label}</span>
-                  </>
-                ) : null}
-                <span className="ml-auto text-muted/50">
-                  {formatRelativeTime(item.published_at)}
-                </span>
-              </div>
-            </article>
-          ))
+                <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono text-muted">
+                  <span className="text-accent-soft">{item.source}</span>
+                  <span>|</span>
+                  <span>{item.country || "Global"}</span>
+                  <span>|</span>
+                  <span>{item.region}</span>
+                  <span>|</span>
+                  <span>{formatRelativeTime(item.published_at)}</span>
+                  <span className="ml-auto">
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded border border-border px-1.5 py-0.5 text-muted hover:border-accent/40 hover:text-accent"
+                    >
+                      Source
+                    </a>
+                  </span>
+                </div>
+              </article>
+            );
+          })
         )}
       </div>
-    </div>
+    </Panel>
   );
 }
 
 function PanelSkeleton() {
   return (
-    <div className="glow-border rounded-lg bg-panel p-4">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-accent font-mono text-sm font-bold tracking-widest uppercase">
-          Intel Feed
-        </h2>
-        <span className="text-muted font-mono text-[10px]">LOADING...</span>
-      </div>
+    <Panel
+      title="Intel Feed"
+      subtitle="Loading signals..."
+      className="h-full min-h-[320px]"
+      contentClassName="px-4 pb-4"
+    >
       <div className="space-y-2">
         {Array.from({ length: 5 }, (_, i) => (
-          <div key={i} className="bg-background/30 rounded-md h-[72px] animate-pulse" />
+          <div key={i} className="h-[74px] animate-pulse rounded-md bg-background/30" />
         ))}
       </div>
-    </div>
+    </Panel>
   );
 }
 
-function PanelError({
-  message,
-  onRetry,
-}: {
-  message: string;
-  onRetry: () => void;
-}) {
+function PanelError({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="glow-border rounded-lg bg-panel p-4">
-      <h2 className="text-accent font-mono text-sm font-bold tracking-widest uppercase mb-3">
-        Intel Feed
-      </h2>
-      <div className="bg-negative/5 border border-negative/30 rounded-md p-4">
-        <p className="text-negative text-sm font-mono font-bold">CONNECTION ERROR</p>
-        <p className="text-muted text-xs font-mono mt-2">{message}</p>
+    <Panel
+      title="Intel Feed"
+      subtitle="Connection issue"
+      className="h-full min-h-[320px]"
+      contentClassName="px-4 pb-4"
+    >
+      <div className="rounded-md border border-danger/35 bg-danger/10 p-3">
+        <p className="text-danger text-sm font-mono font-bold">Connection error</p>
+        <p className="mt-2 text-xs font-mono text-muted">{message}</p>
         <button
           type="button"
           onClick={onRetry}
-          className="mt-3 text-[10px] font-mono uppercase tracking-widest px-2.5 py-1 rounded border border-accent/40 text-accent hover:bg-accent/10 transition-colors"
+          className="mt-3 rounded border border-accent/40 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-accent hover:bg-accent/10"
         >
           Retry
         </button>
       </div>
-    </div>
+    </Panel>
   );
 }

@@ -8,6 +8,8 @@ import type { NewsItem } from "@/lib/api";
 
 type WorldNewsMapProps = {
   items: NewsItem[];
+  selectedNewsId: number | null;
+  onSelectNews: (id: number | null) => void;
 };
 
 type PinCluster = {
@@ -23,7 +25,11 @@ const DEFAULT_CENTER: [number, number] = [18, 8];
 const DEFAULT_ZOOM = 2;
 const MAX_POPUP_ITEMS = 6;
 
-export default function WorldNewsMap({ items }: WorldNewsMapProps) {
+export default function WorldNewsMap({
+  items,
+  selectedNewsId,
+  onSelectNews,
+}: WorldNewsMapProps) {
   const [tileError, setTileError] = useState(false);
 
   const clusters = useMemo(() => buildClusters(items), [items]);
@@ -41,7 +47,7 @@ export default function WorldNewsMap({ items }: WorldNewsMapProps) {
         preferCanvas
       >
         <TileLayer
-          attribution='&copy; OpenStreetMap contributors &copy; CARTO'
+          attribution="&copy; OpenStreetMap contributors &copy; CARTO"
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           eventHandlers={{
             tileerror: () => setTileError(true),
@@ -49,17 +55,28 @@ export default function WorldNewsMap({ items }: WorldNewsMapProps) {
         />
 
         {clusters.map((cluster) => {
-          const radius = Math.min(18, 6 + Math.log2(cluster.items.length + 1) * 3);
+          const hasSelected = cluster.items.some((item) => item.id === selectedNewsId);
+          const radius = hasSelected
+            ? 20
+            : Math.min(18, 6 + Math.log2(cluster.items.length + 1) * 3);
+
           return (
             <CircleMarker
               key={cluster.key}
               center={[cluster.lat, cluster.lon]}
               radius={radius}
+              eventHandlers={{
+                click: () => onSelectNews(cluster.items[0]?.id ?? null),
+              }}
               pathOptions={{
-                color: "#2D7BFF",
-                weight: 1.2,
-                fillColor: cluster.items.length > 1 ? "#00E676" : "#2D7BFF",
-                fillOpacity: 0.72,
+                color: hasSelected ? "#FFC247" : "#2D7BFF",
+                weight: hasSelected ? 2.2 : 1.1,
+                fillColor: hasSelected
+                  ? "#FFC247"
+                  : cluster.items.length > 1
+                  ? "#00E676"
+                  : "#2D7BFF",
+                fillOpacity: hasSelected ? 0.9 : 0.72,
               }}
             >
               <Popup className="world-monitor-popup" maxWidth={440}>
@@ -73,29 +90,36 @@ export default function WorldNewsMap({ items }: WorldNewsMapProps) {
                     </span>
                   </div>
 
-                  <div className="space-y-2 max-h-[240px] overflow-y-auto pr-1">
-                    {cluster.items.slice(0, MAX_POPUP_ITEMS).map((item) => (
-                      <article key={item.id} className="border border-border/60 rounded p-2 bg-background/70">
-                        <a
-                          href={item.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-[12px] leading-snug text-foreground hover:text-accent"
+                  <div className="space-y-2 max-h-[240px] overflow-y-auto pr-1 terminal-scroll">
+                    {cluster.items.slice(0, MAX_POPUP_ITEMS).map((item) => {
+                      const selected = item.id === selectedNewsId;
+                      return (
+                        <article
+                          key={item.id}
+                          className={`rounded border p-2 ${selected ? "border-warning/50 bg-warning/10" : "border-border/60 bg-background/70"}`}
                         >
-                          {item.title}
-                        </a>
-                        <div className="mt-1 text-[10px] text-muted font-mono">
-                          <span>{item.source}</span>
-                          <span> | </span>
-                          <span>{formatDate(item.published_at)}</span>
-                        </div>
-                        <div className="mt-1 text-[10px] text-muted font-mono">
-                          <span>{item.category}</span>
-                          <span> | </span>
-                          <span>{item.country}</span>
-                        </div>
-                      </article>
-                    ))}
+                          <button
+                            type="button"
+                            onClick={() => onSelectNews(item.id)}
+                            className="w-full text-left"
+                          >
+                            <span className="text-[12px] leading-snug text-foreground hover:text-accent">
+                              {item.title}
+                            </span>
+                          </button>
+                          <div className="mt-1 text-[10px] text-muted font-mono">
+                            <span>{item.source}</span>
+                            <span> | </span>
+                            <span>{formatDate(item.published_at)}</span>
+                          </div>
+                          <div className="mt-1 text-[10px] text-muted font-mono">
+                            <span>{item.category}</span>
+                            <span> | </span>
+                            <span>{item.country}</span>
+                          </div>
+                        </article>
+                      );
+                    })}
                   </div>
 
                   {cluster.items.length > MAX_POPUP_ITEMS ? (
@@ -120,7 +144,7 @@ export default function WorldNewsMap({ items }: WorldNewsMapProps) {
 
       {tileError ? (
         <div className="absolute left-3 top-3 z-[600] rounded border border-warning/40 bg-background/90 px-2 py-1 text-[10px] font-mono text-warning">
-          Map tiles unavailable. Pins remain available.
+          Map tiles unavailable. Pins remain visible.
         </div>
       ) : null}
     </div>
@@ -139,7 +163,8 @@ function buildClusters(items: NewsItem[]): PinCluster[] {
       continue;
     }
 
-    const clusterKey = item.country?.trim() || item.location_label?.trim() || `${item.lat}:${item.lon}`;
+    const clusterKey =
+      item.country?.trim() || item.location_label?.trim() || `${item.lat}:${item.lon}`;
     const label = item.location_label || item.country || "Unknown";
 
     const existing = map.get(clusterKey);

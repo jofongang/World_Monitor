@@ -1,5 +1,7 @@
-﻿"use client";
+"use client";
 
+import Badge from "@/components/ui/Badge";
+import Panel from "@/components/ui/Panel";
 import type { AlertItem } from "@/lib/api";
 
 type AlertsPanelProps = {
@@ -11,10 +13,10 @@ type AlertsPanelProps = {
   onRefresh: () => void;
 };
 
-const SEVERITY_STYLES: Record<AlertItem["severity"], string> = {
-  High: "bg-negative/20 text-negative border border-negative/40",
-  Medium: "bg-warning/20 text-warning border border-warning/40",
-  Low: "bg-accent/20 text-accent border border-accent/40",
+const SEVERITY_MAP: Record<AlertItem["severity"], "high" | "medium" | "low"> = {
+  High: "high",
+  Medium: "medium",
+  Low: "low",
 };
 
 export default function AlertsPanel({
@@ -26,19 +28,12 @@ export default function AlertsPanel({
   onRefresh,
 }: AlertsPanelProps) {
   return (
-    <div className="glow-border rounded-lg bg-panel p-3">
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h3 className="text-accent font-mono text-xs font-bold uppercase tracking-widest">
-            Watchlist Alerts
-          </h3>
-          <p className="text-muted text-[11px] font-mono mt-1">
-            {items.length} alerts matched current watchlist rules
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="flex items-center gap-2 rounded border border-border/70 px-2 py-1 bg-background/40">
+    <Panel
+      title="Watchlist Alerts"
+      subtitle="Rule-triggered events from monitored countries/topics."
+      rightSlot={
+        <div className="flex items-center gap-1.5">
+          <label className="inline-flex items-center gap-1 rounded border border-border/70 bg-background/45 px-2 py-1">
             <input
               type="checkbox"
               checked={onlyWatchlistMatches}
@@ -46,27 +41,28 @@ export default function AlertsPanel({
               className="accent-[#2D7BFF]"
             />
             <span className="text-[10px] font-mono uppercase tracking-wider text-muted">
-              Only show watchlist matches
+              Matches
             </span>
           </label>
-
           <button
             type="button"
             onClick={onRefresh}
-            className="text-[10px] font-mono uppercase tracking-widest px-2.5 py-1 rounded border border-accent/40 text-accent hover:bg-accent/10 transition-colors"
+            className="rounded border border-accent/40 px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-accent hover:bg-accent/10"
           >
-            Refresh Alerts
+            Refresh
           </button>
         </div>
-      </div>
-
+      }
+      className="min-h-[230px]"
+      contentClassName="px-4 pb-4"
+    >
       {error ? (
-        <div className="mt-2 rounded border border-warning/30 bg-warning/5 p-2">
-          <p className="text-warning text-[11px] font-mono">Alerts refresh failed: {error}</p>
+        <div className="mb-2 rounded border border-warning/35 bg-warning/10 p-2">
+          <p className="text-warning text-[11px] font-mono">Alerts refresh warning: {error}</p>
         </div>
       ) : null}
 
-      <div className="mt-3 space-y-2 max-h-[210px] overflow-y-auto pr-1">
+      <div className="terminal-scroll space-y-2 max-h-[215px] overflow-y-auto pr-1">
         {loading ? (
           Array.from({ length: 3 }, (_, index) => (
             <div
@@ -75,15 +71,12 @@ export default function AlertsPanel({
             />
           ))
         ) : items.length === 0 ? (
-          <div className="rounded border border-border bg-background/30 p-3">
-            <p className="text-muted text-xs font-mono">No alerts in the selected window.</p>
+          <div className="rounded border border-border bg-background/40 p-3">
+            <p className="text-muted text-xs font-mono">No alerts in this window.</p>
           </div>
         ) : (
           items.slice(0, 8).map((alert) => (
-            <article
-              key={alert.id}
-              className="rounded border border-border bg-background/40 p-2.5"
-            >
+            <article key={alert.id} className="rounded border border-border bg-background/45 p-2.5">
               <div className="flex items-start justify-between gap-2">
                 <a
                   href={alert.url}
@@ -93,36 +86,30 @@ export default function AlertsPanel({
                 >
                   {alert.title}
                 </a>
-                <span
-                  className={`text-[10px] font-mono px-2 py-0.5 rounded-full whitespace-nowrap ${SEVERITY_STYLES[alert.severity]}`}
-                >
-                  {alert.severity.toUpperCase()}
-                </span>
+                <Badge severity={SEVERITY_MAP[alert.severity]} />
               </div>
 
-              <div className="mt-1 flex items-center gap-2 text-[10px] text-muted font-mono">
+              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-muted font-mono">
+                <span className="text-accent-soft">Watchlist Engine</span>
+                <span>|</span>
                 <span>{alert.country || "Global"}</span>
-                <span className="text-border">|</span>
+                <span>|</span>
                 <span>{alert.topic}</span>
-                <span className="text-border">|</span>
+                <span>|</span>
                 <span>{formatRelativeTime(alert.published_at)}</span>
-              </div>
-
-              <div className="mt-1 text-[10px] text-muted font-mono">
-                Rules: {alert.matched_rules.join(", ")}
               </div>
             </article>
           ))
         )}
       </div>
-    </div>
+    </Panel>
   );
 }
 
 function formatRelativeTime(dateStr: string): string {
   const date = new Date(dateStr);
   if (Number.isNaN(date.getTime())) {
-    return "Unknown";
+    return "unknown";
   }
 
   const diffMinutes = Math.floor((Date.now() - date.getTime()) / (1000 * 60));

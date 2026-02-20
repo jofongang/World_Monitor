@@ -1,68 +1,72 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", label: "Dashboard", icon: "[D]" },
-  { href: "/watchlists", label: "Watchlists", icon: "[W]" },
-  { href: "/brief", label: "Daily Brief", icon: "[B]" },
-  { href: "/events", label: "Events", icon: "[E]" },
-  { href: "/markets", label: "Markets", icon: "[M]" },
-  { href: "/videos", label: "Videos", icon: "[V]" },
+  { href: "/dashboard", label: "Ops View", icon: "01" },
+  { href: "/watchlists", label: "Watchlists", icon: "02" },
+  { href: "/brief", label: "Daily Brief", icon: "03" },
+  { href: "/events", label: "Events", icon: "04" },
+  { href: "/markets", label: "Markets", icon: "05" },
+  { href: "/videos", label: "Video Wall", icon: "06" },
 ] as const;
 
 export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-60 flex-shrink-0 bg-panel border-r border-border flex flex-col">
-      <div className="p-4 border-b border-border">
-        <h1 className="text-accent font-mono text-lg font-bold tracking-wider">
+    <aside className="hidden w-64 flex-shrink-0 border-r border-border/90 bg-panel-alt/95 lg:flex lg:flex-col">
+      <div className="border-b border-border/70 px-4 py-4">
+        <h1 className="font-mono text-[17px] font-bold tracking-[0.16em] text-accent">
           WORLD MONITOR
         </h1>
-        <p className="text-muted text-[10px] font-mono mt-1 tracking-widest uppercase">
-          v0.5.0 // Command Center
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+          Situational Terminal v0.7.0
         </p>
       </div>
 
-      <nav className="flex-1 p-3 space-y-1">
+      <nav className="flex-1 space-y-1 p-3">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2 rounded text-sm font-mono transition-colors ${
+              className={`group flex items-center gap-3 rounded-md border px-3 py-2.5 text-sm font-mono transition-colors ${
                 active
-                  ? "bg-accent/10 text-accent border border-accent/30"
-                  : "text-muted hover:text-foreground hover:bg-panel-hover border border-transparent"
+                  ? "border-accent/45 bg-accent/15 text-accent"
+                  : "border-transparent text-muted hover:border-border-strong hover:bg-panel-hover hover:text-foreground"
               }`}
             >
-              <span className="text-[11px]">{item.icon}</span>
+              <span
+                className={`inline-flex h-5 w-5 items-center justify-center rounded border text-[10px] font-bold ${
+                  active
+                    ? "border-accent/60 text-accent"
+                    : "border-border/70 text-muted group-hover:border-accent/35"
+                }`}
+              >
+                {item.icon}
+              </span>
               <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-3 border-t border-border">
-        <div className="text-[10px] text-muted font-mono uppercase tracking-wider mb-2">
-          Monitor Mode
-        </div>
-        <div className="space-y-1 text-[10px] font-mono text-muted/80">
-          <div>1. Watchlists define priorities</div>
-          <div>2. Alerts flag new matches</div>
-          <div>3. Daily brief summarizes risk</div>
-        </div>
-      </div>
-
-      <div className="p-3 border-t border-border">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-positive animate-pulse" />
-          <span className="text-[10px] text-muted font-mono uppercase tracking-wider">
-            System Online
-          </span>
+      <div className="border-t border-border/70 p-3">
+        <div className="rounded-md border border-border/80 bg-background/50 p-2.5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.13em] text-muted">
+            Session
+          </p>
+          <div className="mt-2 space-y-1 text-[10px] font-mono text-muted">
+            <p>Mode: Monitor</p>
+            <p>Feed: English Sources</p>
+            <p className="flex items-center gap-2 text-positive">
+              <span className="h-1.5 w-1.5 rounded-full bg-positive animate-pulse" />
+              Online
+            </p>
+          </div>
         </div>
       </div>
     </aside>

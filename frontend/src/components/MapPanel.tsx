@@ -1,13 +1,15 @@
 "use client";
 
 import dynamic from "next/dynamic";
+
+import Panel from "@/components/ui/Panel";
 import type { NewsItem } from "@/lib/api";
 
 const WorldNewsMap = dynamic(() => import("@/components/WorldNewsMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full min-h-[420px] items-center justify-center text-muted font-mono text-xs">
-      Initializing map...
+    <div className="flex h-full min-h-[520px] items-center justify-center px-4 text-muted font-mono text-xs">
+      Initializing geospatial layer...
     </div>
   ),
 });
@@ -16,44 +18,66 @@ type MapPanelProps = {
   items: NewsItem[];
   loading: boolean;
   error: string | null;
+  selectedNewsId: number | null;
+  onSelectNews: (id: number | null) => void;
 };
 
-export default function MapPanel({ items, loading, error }: MapPanelProps) {
+export default function MapPanel({
+  items,
+  loading,
+  error,
+  selectedNewsId,
+  onSelectNews,
+}: MapPanelProps) {
   const pinCount = items.filter((item) => item.lat !== null && item.lon !== null).length;
+  const selectedItem = items.find((item) => item.id === selectedNewsId) ?? null;
 
   return (
-    <div className="glow-border rounded-lg bg-panel min-h-[420px] relative overflow-hidden">
-      <div className="flex items-center justify-between px-4 pt-4 pb-2">
-        <div>
-          <h2 className="text-accent font-mono text-sm font-bold tracking-widest uppercase">
-            Global Situation Map
-          </h2>
-          <p className="text-muted text-[11px] font-mono mt-1">
-            Geo-tagged events from current intel feed
-          </p>
-        </div>
-        <span className="text-muted font-mono text-[10px] tracking-wider">
-          {pinCount} PINNED
+    <Panel
+      title="Global Situation Map"
+      subtitle="Geo-clustered news events. Select a feed item to highlight location."
+      rightSlot={
+        <span className="text-[10px] font-mono text-muted tracking-wider">
+          {pinCount} pinned
         </span>
-      </div>
-
+      }
+      className="h-full min-h-[590px]"
+      contentClassName="px-4 pb-4"
+    >
       {error ? (
-        <div className="mx-4 mb-3 rounded border border-warning/30 bg-warning/5 p-2">
-          <p className="text-warning text-[11px] font-mono">
-            Data warning: {error}
-          </p>
+        <div className="mb-2 rounded border border-warning/35 bg-warning/10 px-2.5 py-2">
+          <p className="text-warning text-[11px] font-mono">Data warning: {error}</p>
         </div>
       ) : null}
 
+      <div className="mb-2 flex items-center justify-between text-[10px] font-mono text-muted">
+        <span>
+          {selectedItem
+            ? `Selected: ${selectedItem.country} ${selectedItem.location_label ? `(${selectedItem.location_label})` : ""}`
+            : "Selected: none"}
+        </span>
+        <button
+          type="button"
+          onClick={() => onSelectNews(null)}
+          className="rounded border border-border px-2 py-1 text-muted hover:text-foreground hover:border-accent/40"
+        >
+          Clear
+        </button>
+      </div>
+
       {loading ? (
-        <div className="flex h-[360px] items-center justify-center text-muted font-mono text-xs px-4">
+        <div className="flex h-[520px] items-center justify-center px-4 text-muted font-mono text-xs">
           Loading map data...
         </div>
       ) : (
-        <div className="h-[360px] px-3 pb-3">
-          <WorldNewsMap items={items} />
+        <div className="h-[520px] overflow-hidden rounded-md">
+          <WorldNewsMap
+            items={items}
+            selectedNewsId={selectedNewsId}
+            onSelectNews={onSelectNews}
+          />
         </div>
       )}
-    </div>
+    </Panel>
   );
 }
