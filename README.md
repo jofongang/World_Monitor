@@ -1,6 +1,6 @@
-# World Monitor â€” Command Center
+# World Monitor Command Center
 
-Global intelligence command center â€” OSINT + markets monitoring dashboard.
+Global intelligence command center OSINT + markets monitoring dashboard.
 
 **Step 1**: Skeleton app with mock data, dark "Batman command-center" theme.
 
@@ -78,16 +78,16 @@ npm run dev
    ```
    Expected: `{"status":"ok","timestamp":"..."}`
 
-2. **Frontend**: Open http://localhost:3000 â€” should redirect to `/dashboard`
+2. **Frontend**: Open http://localhost:3000 should redirect to `/dashboard`
 
 3. **Dashboard**: Should show:
    - Map placeholder (dark panel with SVG grid lines)
    - Markets panel (8 ticker cards with green/red colors)
    - Intel feed (10 news cards with category chips)
 
-4. **Navigation**: Click sidebar links â†’ Events, Markets, Videos pages render
+4. **Navigation**: Click sidebar links Events, Markets, Videos pages render
 
-5. **Error handling**: Stop the backend â†’ panels show error messages
+5. **Error handling**: Stop the backend panels show error messages
 
 ---
 
