@@ -2,7 +2,7 @@
  * World Monitor - API fetch helpers
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "/wm-api").replace(/\/+$/, "");
 
 export interface NewsItem {
   id: number;

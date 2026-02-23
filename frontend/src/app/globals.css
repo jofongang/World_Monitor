@@ -227,38 +227,80 @@ a {
   color: var(--color-foreground);
 }
 
-.leaflet-container {
-  background: #060911;
-}
-
-.world-monitor-popup .leaflet-popup-content-wrapper,
-.leaflet-popup-content-wrapper {
-  background: #0b1324;
-  color: #e8eefa;
+.gm-style .gm-style-iw-c {
   border: 1px solid #1a2b4e;
-  box-shadow: 0 0 10px rgba(45, 123, 255, 0.25);
+  background: #0b1324;
+  border-radius: 0.55rem;
+  box-shadow: 0 0 14px rgba(45, 123, 255, 0.26);
+  padding: 0;
 }
 
-.world-monitor-popup .leaflet-popup-tip,
-.leaflet-popup-tip {
+.gm-style .gm-style-iw-d {
+  overflow: hidden !important;
   background: #0b1324;
 }
 
-.leaflet-popup-close-button {
-  color: #7f93b7 !important;
+.gm-style .gm-style-iw-tc::after {
+  background: #0b1324;
 }
 
-.leaflet-popup-close-button:hover {
-  color: #2d7bff !important;
+.wm-google-popup {
+  min-width: 230px;
+  max-width: 420px;
+  padding: 0.55rem 0.6rem;
+  color: #e8eefa;
+  font-family: var(--font-mono);
 }
 
-.leaflet-control-zoom a {
-  background: #0b1324 !important;
-  color: #e8eefa !important;
-  border-color: #1a2b4e !important;
+.wm-google-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  color: #2d7bff;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
 }
 
-.leaflet-control-zoom a:hover {
-  background: #111e39 !important;
-  color: #2d7bff !important;
+.wm-google-popup-list {
+  margin-top: 0.45rem;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.wm-google-popup-item {
+  border: 1px solid rgba(26, 43, 78, 0.65);
+  border-radius: 0.45rem;
+  background: rgba(6, 9, 17, 0.55);
+  padding: 0.42rem;
+}
+
+.wm-google-popup-item + .wm-google-popup-item {
+  margin-top: 0.36rem;
+}
+
+.wm-google-popup-item-selected {
+  border-color: rgba(255, 194, 71, 0.5);
+  background: rgba(255, 194, 71, 0.12);
+}
+
+.wm-google-popup-title {
+  color: #e8eefa;
+  font-size: 0.72rem;
+  line-height: 1.05rem;
+}
+
+.wm-google-popup-meta {
+  margin-top: 0.17rem;
+  color: #7f93b7;
+  font-size: 0.62rem;
+}
+
+.wm-google-popup-footer {
+  margin-top: 0.45rem;
+  color: #7f93b7;
+  font-size: 0.62rem;
 }

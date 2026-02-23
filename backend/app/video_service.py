@@ -183,12 +183,22 @@ class VideoService:
 
     def get_videos(self, force_refresh: bool = False) -> list[dict[str, Any]]:
         if force_refresh:
-            self.refresh(force=True)
+            self.refresh_async(force=True)
         else:
             self._refresh_if_stale()
 
         with self._state_lock:
             return [dict(item) for item in self._cache]
+
+    def refresh_async(self, force: bool = False) -> None:
+        if self._refresh_lock.locked():
+            return
+        thread = threading.Thread(
+            target=self.refresh,
+            kwargs={"force": force},
+            daemon=True,
+        )
+        thread.start()
 
     def refresh(self, force: bool = False) -> None:
         now = time.time()
@@ -229,7 +239,7 @@ class VideoService:
             stale = now - self._cached_at >= self.cache_seconds
             empty = not self._cache
         if stale or empty:
-            self.refresh(force=False)
+            self.refresh_async(force=False)
 
     def _pull_all_sources(self) -> list[dict[str, Any]]:
         seen_urls: set[str] = set()

@@ -288,7 +288,7 @@ class NewsService:
 
     def get_news(self, force_refresh: bool = False) -> dict[str, Any]:
         if force_refresh:
-            self.refresh(force=True)
+            self.refresh_async(force=True)
         else:
             self._refresh_if_stale()
 
@@ -311,11 +311,13 @@ class NewsService:
                 now - self._last_refresh_attempt >= self.refresh_interval_seconds
             )
         if not has_cache:
-            self.refresh(force=True)
+            self.refresh_async(force=True)
         elif stale:
             self.refresh_async(force=False)
 
     def refresh_async(self, force: bool = False, bypass_cooldown: bool = False) -> None:
+        if self._refresh_lock.locked():
+            return
         thread = threading.Thread(
             target=self.refresh,
             kwargs={"force": force, "bypass_cooldown": bypass_cooldown},
@@ -333,11 +335,7 @@ class NewsService:
                 if now - self._last_refresh_attempt < self.refresh_interval_seconds:
                     return
 
-        if force:
-            wait_seconds = self.request_timeout_seconds * max(1, len(self.sources))
-            acquired = self._refresh_lock.acquire(timeout=wait_seconds)
-        else:
-            acquired = self._refresh_lock.acquire(blocking=False)
+        acquired = self._refresh_lock.acquire(blocking=False)
         if not acquired:
             return
 

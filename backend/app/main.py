@@ -51,8 +51,8 @@ brief_service = BriefService(
 async def lifespan(_: FastAPI):
     await news_service.start()
     await ingestion_service.start()
-    market_service.refresh(force=True)
-    video_service.refresh(force=True)
+    market_service.refresh_async(force=True)
+    video_service.refresh_async(force=True)
     try:
         yield
     finally:
@@ -70,6 +70,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origin_regex=r"https?://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

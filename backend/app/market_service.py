@@ -97,8 +97,8 @@ class MarketService:
 
         self._state_lock = threading.Lock()
         self._refresh_lock = threading.Lock()
-        self._markets_cache: list[dict[str, Any]] = []
-        self._markets_cached_at = 0.0
+        self._markets_cache: list[dict[str, Any]] = self._bootstrap_snapshot()
+        self._markets_cached_at = time.time()
         self._history_cache: dict[str, tuple[float, dict[str, Any]]] = {}
 
     def get_markets(self) -> list[dict[str, Any]]:
@@ -126,6 +126,16 @@ class MarketService:
             self._history_cache[normalized_range] = (time.time(), payload)
 
         return _copy_history_payload(payload)
+
+    def refresh_async(self, force: bool = False) -> None:
+        if self._refresh_lock.locked():
+            return
+        thread = threading.Thread(
+            target=self.refresh,
+            kwargs={"force": force},
+            daemon=True,
+        )
+        thread.start()
 
     def refresh(self, force: bool = False) -> None:
         now = time.time()
@@ -158,7 +168,22 @@ class MarketService:
             stale = now - self._markets_cached_at >= self.cache_seconds
             empty = not self._markets_cache
         if stale or empty:
-            self.refresh(force=False)
+            self.refresh_async(force=False)
+
+    def _bootstrap_snapshot(self) -> list[dict[str, Any]]:
+        as_of = utc_now_iso()
+        return [
+            {
+                "symbol": spec.symbol,
+                "name": spec.name,
+                "price": None,
+                "change_pct": None,
+                "as_of": as_of,
+                "provider": spec.provider,
+                "error": "initializing",
+            }
+            for spec in MARKET_SPECS
+        ]
 
     def _fetch_live_markets(self) -> list[dict[str, Any]]:
         fetch_iso = utc_now_iso()

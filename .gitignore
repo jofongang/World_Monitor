@@ -1,12 +1,48 @@
+# Local editor/agent config
+.claude/
+.vscode/
+.idea/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
 nul
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.crt
+id_rsa
+id_dsa
+
+# Logs
+*.log
+backend/*smoke*.log
+frontend/*smoke*.log
+
+# Python
 backend/venv/
+backend/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Frontend build artifacts
 frontend/.next/
 frontend/node_modules/
+frontend/out/
+frontend/.turbo/
+
+# Backend runtime/cache data
 backend/.tmp/
 backend/tests/.tmp/
 backend/app/data/world_monitor.db*
-backend/*smoke*.log
-frontend/*smoke*.log
-# Python cache
-__pycache__/
-*.pyc
+*.sqlite
+*.db
+*.db-shm
+*.db-wal

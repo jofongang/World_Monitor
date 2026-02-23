@@ -35,7 +35,7 @@ export default function MapPanel({
   return (
     <Panel
       title="Global Situation Map"
-      subtitle="Geo-clustered news events. Select a feed item to highlight location."
+      subtitle="Google Earth-style 3D globe with geo-clustered news events."
       rightSlot={
         <span className="text-[10px] font-mono text-muted tracking-wider">
           {pinCount} pinned

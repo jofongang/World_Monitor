@@ -12,6 +12,7 @@ It combines public OSINT feeds into a unified event pipeline with alerting, sour
 
 ```powershell
 cd backend
+Copy-Item .env.example .env -ErrorAction SilentlyContinue
 python -m venv venv
 .\venv\Scripts\python.exe -m pip install -r requirements.txt
 .\venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
@@ -21,6 +22,7 @@ python -m venv venv
 
 ```powershell
 cd frontend
+Copy-Item .env.example .env.local -ErrorAction SilentlyContinue
 & 'C:\Program Files\nodejs\npm.cmd' install
 & 'C:\Program Files\nodejs\npm.cmd' run dev
 ```
@@ -58,6 +60,12 @@ Existing APIs remain available:
 
 ## Environment Variables
 
+Frontend:
+- `NEXT_PUBLIC_API_URL` (optional; default uses Next.js proxy `/wm-api -> http://127.0.0.1:8000`)
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (required for 3D globe map)
+- `NEXT_PUBLIC_GOOGLE_MAP_ID` (optional, enables enhanced vector styling/tilt)
+
+Backend:
 - `EVENT_SCHEDULER_ENABLED` (default `1`)
 - `EVENT_REFRESH_MINUTES` (default `10`)
 - `EVENT_CONNECTOR_DELAY_SECONDS` (default `0.35`)
@@ -129,3 +137,5 @@ See:
 - `SOURCES.md`
 - `RUNBOOK.md`
 - `DECISIONS.md`
+- `SECURITY.md`
+- `OPEN_SOURCE_CHECKLIST.md`
