@@ -1,4 +1,6 @@
-"use client";
+﻿"use client";
+
+import { useEffect, useMemo, useState } from "react";
 
 import Panel from "@/components/ui/Panel";
 import type { NewsItem } from "@/lib/api";
@@ -11,7 +13,7 @@ type NewsPanelProps = {
   error: string | null;
   onRefresh: () => void;
   selectedNewsId: number | null;
-  onSelectNews: (id: number) => void;
+  onSelectNews: (id: number | null) => void;
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -69,6 +71,49 @@ export default function NewsPanel({
   selectedNewsId,
   onSelectNews,
 }: NewsPanelProps) {
+  const [cursorIndex, setCursorIndex] = useState(0);
+
+  const boundedCursorIndex = items.length === 0 ? 0 : Math.min(cursorIndex, items.length - 1);
+  const cursorNewsId = useMemo(() => items[boundedCursorIndex]?.id ?? null, [items, boundedCursorIndex]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const isEditable =
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.isContentEditable;
+      if (isEditable || items.length === 0) {
+        return;
+      }
+      if (event.key.toLowerCase() === "j") {
+        event.preventDefault();
+        setCursorIndex((value) => Math.min(items.length - 1, value + 1));
+      } else if (event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setCursorIndex((value) => Math.max(0, value - 1));
+      } else if (event.key === "Enter") {
+        const current = items[boundedCursorIndex];
+        if (!current) return;
+        event.preventDefault();
+        onSelectNews(current.id);
+        window.open(current.url, "_blank", "noopener,noreferrer");
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        onSelectNews(null);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [items, boundedCursorIndex, onSelectNews]);
+
+  useEffect(() => {
+    if (cursorNewsId !== null && selectedNewsId !== cursorNewsId) {
+      onSelectNews(cursorNewsId);
+    }
+  }, [cursorNewsId, selectedNewsId, onSelectNews]);
+
   if (loading) return <PanelSkeleton />;
   if (error && items.length === 0) {
     return <PanelError message={error} onRetry={onRefresh} />;
@@ -110,7 +155,7 @@ export default function NewsPanel({
             </p>
           </div>
         ) : (
-          items.map((item) => {
+          items.map((item, index) => {
             const selected = selectedNewsId === item.id;
             return (
               <article
@@ -118,6 +163,8 @@ export default function NewsPanel({
                 className={`rounded-md border p-3 transition-colors ${
                   selected
                     ? "border-warning/55 bg-warning/10"
+                    : boundedCursorIndex === index
+                    ? "border-accent/45 bg-accent/10"
                     : "border-border bg-background/45 hover:border-accent/38"
                 }`}
               >
@@ -203,3 +250,4 @@ function PanelError({ message, onRetry }: { message: string; onRetry: () => void
     </Panel>
   );
 }
+

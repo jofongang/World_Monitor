@@ -5,11 +5,15 @@ import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Ops View", icon: "01" },
-  { href: "/watchlists", label: "Watchlists", icon: "02" },
-  { href: "/brief", label: "Daily Brief", icon: "03" },
+  { href: "/grid", label: "Monitor Wall", icon: "02" },
+  { href: "/alerts", label: "Alert Inbox", icon: "03" },
   { href: "/events", label: "Events", icon: "04" },
-  { href: "/markets", label: "Markets", icon: "05" },
-  { href: "/videos", label: "Video Wall", icon: "06" },
+  { href: "/watchlists", label: "Watchlists", icon: "05" },
+  { href: "/sources", label: "Sources", icon: "06" },
+  { href: "/health", label: "Health", icon: "07" },
+  { href: "/brief", label: "Daily Brief", icon: "08" },
+  { href: "/markets", label: "Markets", icon: "09" },
+  { href: "/videos", label: "Video Wall", icon: "10" },
 ] as const;
 
 export default function Sidebar() {
@@ -22,11 +26,11 @@ export default function Sidebar() {
           WORLD MONITOR
         </h1>
         <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-          Situational Terminal v0.7.0
+          Situational Terminal v0.8.0
         </p>
       </div>
 
-      <nav className="flex-1 space-y-1 p-3">
+      <nav className="terminal-scroll flex-1 space-y-1 overflow-y-auto p-3">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
@@ -61,10 +65,10 @@ export default function Sidebar() {
           </p>
           <div className="mt-2 space-y-1 text-[10px] font-mono text-muted">
             <p>Mode: Monitor</p>
-            <p>Feed: English Sources</p>
+            <p>Feed: Public OSINT</p>
             <p className="flex items-center gap-2 text-positive">
-              <span className="h-1.5 w-1.5 rounded-full bg-positive animate-pulse" />
-              Online
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-positive" />
+              Live
             </p>
           </div>
         </div>

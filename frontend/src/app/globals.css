@@ -79,6 +79,29 @@ a {
     rgba(13, 23, 48, 0.88) 100%
   );
   box-shadow: 0 0 0 1px rgba(45, 123, 255, 0.06), 0 10px 24px rgba(1, 4, 10, 0.65);
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+  animation: panel-fade-in 220ms ease;
+}
+
+.panel-frame:hover {
+  border-color: rgba(45, 123, 255, 0.4);
+  box-shadow: 0 0 0 1px rgba(45, 123, 255, 0.16), 0 14px 30px rgba(1, 4, 10, 0.7);
+}
+
+.panel-frame:focus-within {
+  border-color: rgba(45, 123, 255, 0.62);
+  box-shadow: 0 0 0 1px rgba(45, 123, 255, 0.26), 0 14px 30px rgba(1, 4, 10, 0.76);
+}
+
+@keyframes panel-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .glow-border {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
+import CommandPalette from "@/components/CommandPalette";
 import HeaderBar from "@/components/HeaderBar";
 import Sidebar from "@/components/Sidebar";
 import { CommandStateProvider } from "@/components/ui/CommandState";
@@ -39,6 +40,7 @@ export default function RootLayout({
               <HeaderBar />
               <main className="flex-1 overflow-y-auto p-4 md:p-5">{children}</main>
             </div>
+            <CommandPalette />
           </div>
         </CommandStateProvider>
       </body>

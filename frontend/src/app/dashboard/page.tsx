@@ -7,18 +7,23 @@ import MapPanel from "@/components/MapPanel";
 import MarketsPanel from "@/components/MarketsPanel";
 import NewsPanel from "@/components/NewsPanel";
 import OperatorNotesPanel from "@/components/OperatorNotesPanel";
+import TerminalLogPanel from "@/components/TerminalLogPanel";
+import TimelineStrip from "@/components/TimelineStrip";
 import Chip from "@/components/ui/Chip";
 import Kpi from "@/components/ui/Kpi";
 import Panel from "@/components/ui/Panel";
 import { useCommandState } from "@/components/ui/CommandState";
 import { fetchAlerts, fetchNews, type AlertItem, type NewsItem } from "@/lib/api";
 
-type TimeWindow = "24h" | "7d" | "30d";
-
-const TIME_WINDOWS: TimeWindow[] = ["24h", "7d", "30d"];
-
 export default function DashboardPage() {
-  const { searchQuery } = useCommandState();
+  const {
+    searchQuery,
+    opsWindow,
+    watchlistOnly,
+    setWatchlistOnly,
+    highSeverityOnly,
+    setHighSeverityOnly,
+  } = useCommandState();
 
   const [news, setNews] = useState<NewsItem[]>([]);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
@@ -32,9 +37,6 @@ export default function DashboardPage() {
 
   const [regionFilter, setRegionFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [timeWindow, setTimeWindow] = useState<TimeWindow>("24h");
-  const [onlyWatchlistMatches, setOnlyWatchlistMatches] = useState(false);
-  const [onlyHighSeverity, setOnlyHighSeverity] = useState(false);
   const [selectedNewsId, setSelectedNewsId] = useState<number | null>(null);
 
   const loadNews = useCallback(async (forceRefresh: boolean) => {
@@ -43,15 +45,13 @@ export default function DashboardPage() {
     } else {
       setLoading(true);
     }
-
     try {
       setError(null);
       const payload = await fetchNews({ refresh: forceRefresh });
       setNews(payload.items);
       setLastUpdated(payload.last_updated);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unexpected error";
-      setError(message);
+      setError(err instanceof Error ? err.message : "Unexpected error");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -62,15 +62,14 @@ export default function DashboardPage() {
     setAlertsLoading(true);
     try {
       setAlertsError(null);
-      const payload = await fetchAlerts(getSinceHours(timeWindow));
+      const payload = await fetchAlerts(getSinceHours(opsWindow));
       setAlerts(payload.items);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unexpected error";
-      setAlertsError(message);
+      setAlertsError(err instanceof Error ? err.message : "Unexpected error");
     } finally {
       setAlertsLoading(false);
     }
-  }, [timeWindow]);
+  }, [opsWindow]);
 
   useEffect(() => {
     void loadNews(false);
@@ -100,7 +99,7 @@ export default function DashboardPage() {
 
   const filteredAlerts = useMemo(() => {
     return alerts.filter((item) => {
-      if (onlyHighSeverity && item.severity !== "High") {
+      if (highSeverityOnly && item.severity !== "High") {
         return false;
       }
       if (!matchesSearch(item, searchQuery)) {
@@ -108,7 +107,7 @@ export default function DashboardPage() {
       }
       return true;
     });
-  }, [alerts, onlyHighSeverity, searchQuery]);
+  }, [alerts, highSeverityOnly, searchQuery]);
 
   const alertMatchKeys = useMemo(() => {
     const keys = new Set<string>();
@@ -117,9 +116,8 @@ export default function DashboardPage() {
   }, [filteredAlerts]);
 
   const filteredNews = useMemo(() => {
-    const cutoff = getTimeCutoff(timeWindow);
+    const cutoff = getTimeCutoff(opsWindow);
     const query = searchQuery.trim().toLowerCase();
-
     return news.filter((item) => {
       if (regionFilter !== "all" && item.region !== regionFilter) {
         return false;
@@ -136,32 +134,21 @@ export default function DashboardPage() {
       }
       return publishedAt.getTime() >= cutoff;
     });
-  }, [news, regionFilter, categoryFilter, searchQuery, timeWindow]);
+  }, [news, regionFilter, categoryFilter, searchQuery, opsWindow]);
 
   const visibleNews = useMemo(() => {
     let current = filteredNews;
-
-    if (onlyWatchlistMatches) {
+    if (watchlistOnly) {
       current = current.filter((item) => alertMatchKeys.has(buildNewsKey(item)));
     }
-
-    if (onlyHighSeverity) {
+    if (highSeverityOnly) {
       current = current.filter((item) => highSeverityMatchKeys.has(buildNewsKey(item)));
     }
-
     return current;
-  }, [
-    filteredNews,
-    onlyWatchlistMatches,
-    onlyHighSeverity,
-    alertMatchKeys,
-    highSeverityMatchKeys,
-  ]);
+  }, [filteredNews, watchlistOnly, highSeverityOnly, alertMatchKeys, highSeverityMatchKeys]);
 
   useEffect(() => {
-    if (selectedNewsId === null) {
-      return;
-    }
+    if (selectedNewsId === null) return;
     const stillVisible = visibleNews.some((item) => item.id === selectedNewsId);
     if (!stillVisible) {
       setSelectedNewsId(null);
@@ -173,39 +160,31 @@ export default function DashboardPage() {
     await loadAlerts();
   }, [loadNews, loadAlerts]);
 
+  const selectedNews = useMemo(
+    () => visibleNews.find((item) => item.id === selectedNewsId) ?? null,
+    [visibleNews, selectedNewsId]
+  );
+
   return (
     <div className="space-y-4">
       <Panel
         title="Ops Controls"
         subtitle="Quick filters for map, alerts, and feed."
-        className=""
         contentClassName="space-y-3 px-4 pb-4"
       >
         <div className="grid grid-cols-2 gap-2 md:grid-cols-4 xl:grid-cols-6">
           <Kpi label="Signals" value={`${visibleNews.length}`} />
           <Kpi label="Alerts" value={`${filteredAlerts.length}`} />
-          <Kpi label="Pinned" value={`${visibleNews.filter((item) => item.lat !== null && item.lon !== null).length}`} />
-          <Kpi label="Window" value={timeWindow.toUpperCase()} />
-          <Kpi label="Watchlist" value={onlyWatchlistMatches ? "On" : "Off"} />
-          <Kpi label="Risk Filter" value={onlyHighSeverity ? "High" : "All"} />
+          <Kpi
+            label="Pinned"
+            value={`${visibleNews.filter((item) => item.lat !== null && item.lon !== null).length}`}
+          />
+          <Kpi label="Window" value={opsWindow.toUpperCase()} />
+          <Kpi label="Watchlist" value={watchlistOnly ? "On" : "Off"} />
+          <Kpi label="Risk Filter" value={highSeverityOnly ? "High" : "All"} />
         </div>
 
         <div className="space-y-2">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-muted">
-              Time
-            </span>
-            {TIME_WINDOWS.map((windowValue) => (
-              <Chip
-                key={windowValue}
-                active={timeWindow === windowValue}
-                onClick={() => setTimeWindow(windowValue)}
-              >
-                {windowValue}
-              </Chip>
-            ))}
-          </div>
-
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-muted">
               Region
@@ -228,10 +207,7 @@ export default function DashboardPage() {
             <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-muted">
               Category
             </span>
-            <Chip
-              active={categoryFilter === "all"}
-              onClick={() => setCategoryFilter("all")}
-            >
+            <Chip active={categoryFilter === "all"} onClick={() => setCategoryFilter("all")}>
               All
             </Chip>
             {categoryOptions.map((category) => (
@@ -249,16 +225,10 @@ export default function DashboardPage() {
             <span className="text-[10px] font-mono uppercase tracking-[0.12em] text-muted">
               Toggles
             </span>
-            <Chip
-              active={onlyWatchlistMatches}
-              onClick={() => setOnlyWatchlistMatches((value) => !value)}
-            >
+            <Chip active={watchlistOnly} onClick={() => setWatchlistOnly((value) => !value)}>
               Watchlist-only
             </Chip>
-            <Chip
-              active={onlyHighSeverity}
-              onClick={() => setOnlyHighSeverity((value) => !value)}
-            >
+            <Chip active={highSeverityOnly} onClick={() => setHighSeverityOnly((value) => !value)}>
               High Severity
             </Chip>
             <Chip onClick={() => void refreshAll()} disabled={refreshing}>
@@ -279,13 +249,13 @@ export default function DashboardPage() {
           />
         </div>
 
-        <div className="xl:col-span-2 flex flex-col gap-4">
+        <div className="flex flex-col gap-4 xl:col-span-2">
           <AlertsPanel
             items={filteredAlerts}
             loading={alertsLoading}
             error={alertsError}
-            onlyWatchlistMatches={onlyWatchlistMatches}
-            onToggleOnlyMatches={setOnlyWatchlistMatches}
+            onlyWatchlistMatches={watchlistOnly}
+            onToggleOnlyMatches={setWatchlistOnly}
             onRefresh={() => void loadAlerts()}
           />
 
@@ -304,64 +274,78 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <div className="xl:col-span-2">
+          <TimelineStrip sinceHours={getSinceHours(opsWindow)} />
+        </div>
+        <Panel
+          title="Intel Card"
+          subtitle="Selected feed item details"
+          contentClassName="space-y-2 px-4 pb-4"
+        >
+          {selectedNews ? (
+            <>
+              <h3 className="text-sm text-foreground leading-snug">{selectedNews.title}</h3>
+              <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-muted">
+                <span>{selectedNews.source}</span>
+                <span>|</span>
+                <span>{selectedNews.country || "Global"}</span>
+                <span>|</span>
+                <span>{selectedNews.region}</span>
+                <span>|</span>
+                <span>{formatRelativeTime(selectedNews.published_at)}</span>
+              </div>
+              <a
+                href={selectedNews.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex rounded border border-accent/40 px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-accent hover:bg-accent/10"
+              >
+                Open Source
+              </a>
+            </>
+          ) : (
+            <p className="text-xs font-mono text-muted">
+              Select an item from the feed to inspect details.
+            </p>
+          )}
+        </Panel>
+      </div>
+
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <OperatorNotesPanel />
-        <Panel
-          title="Status"
-          subtitle="Terminal quality and signal integrity."
-          contentClassName="px-4 pb-4"
-        >
-          <div className="space-y-2 text-xs font-mono">
-            <p className="text-muted">
-              Backend endpoints remain unchanged and active.
-            </p>
-            <p className="text-muted">
-              News click now highlights related map pin clusters.
-            </p>
-            <p className="text-muted">
-              Filters currently active: region={regionFilter}, category={categoryFilter}, window={timeWindow}.
-            </p>
-          </div>
-        </Panel>
+        <TerminalLogPanel dense />
       </div>
     </div>
   );
 }
 
-function getTimeCutoff(windowValue: TimeWindow): number {
+function getTimeCutoff(windowValue: "1h" | "6h" | "24h" | "7d" | "30d"): number {
   const now = Date.now();
-  if (windowValue === "24h") {
-    return now - 24 * 60 * 60 * 1000;
-  }
-  if (windowValue === "7d") {
-    return now - 7 * 24 * 60 * 60 * 1000;
-  }
+  if (windowValue === "1h") return now - 1 * 60 * 60 * 1000;
+  if (windowValue === "6h") return now - 6 * 60 * 60 * 1000;
+  if (windowValue === "24h") return now - 24 * 60 * 60 * 1000;
+  if (windowValue === "7d") return now - 7 * 24 * 60 * 60 * 1000;
   return now - 30 * 24 * 60 * 60 * 1000;
 }
 
-function getSinceHours(windowValue: TimeWindow): number {
-  if (windowValue === "24h") {
-    return 24;
-  }
-  if (windowValue === "7d") {
-    return 7 * 24;
-  }
+function getSinceHours(windowValue: "1h" | "6h" | "24h" | "7d" | "30d"): number {
+  if (windowValue === "1h") return 1;
+  if (windowValue === "6h") return 6;
+  if (windowValue === "24h") return 24;
+  if (windowValue === "7d") return 7 * 24;
   return 30 * 24;
 }
 
 function buildNewsKey(item: NewsItem): string {
   const url = item.url.trim().toLowerCase();
-  if (url) {
-    return `url:${url}`;
-  }
+  if (url) return `url:${url}`;
   return `title:${normalizeText(item.title)}`;
 }
 
 function buildAlertKey(item: AlertItem): string {
   const url = item.url.trim().toLowerCase();
-  if (url) {
-    return `url:${url}`;
-  }
+  if (url) return `url:${url}`;
   return `title:${normalizeText(item.title)}`;
 }
 
@@ -372,6 +356,17 @@ function normalizeText(value: string): string {
     .replace(/[^a-z0-9]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function formatRelativeTime(dateStr: string): string {
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return "unknown";
+  const diffMinutes = Math.floor((Date.now() - date.getTime()) / (1000 * 60));
+  if (diffMinutes < 1) return "<1m ago";
+  if (diffMinutes < 60) return `${diffMinutes}m ago`;
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return `${Math.floor(diffHours / 24)}d ago`;
 }
 
 function matchesSearch(
@@ -389,10 +384,7 @@ function matchesSearch(
   query: string
 ): boolean {
   const normalized = query.trim().toLowerCase();
-  if (!normalized) {
-    return true;
-  }
-
+  if (!normalized) return true;
   const candidate = [
     "title" in item ? item.title : "",
     "source" in item ? item.source : "",
@@ -403,6 +395,5 @@ function matchesSearch(
   ]
     .join(" ")
     .toLowerCase();
-
   return candidate.includes(normalized);
 }

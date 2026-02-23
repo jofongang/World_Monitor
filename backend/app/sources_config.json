@@ -1,0 +1,51 @@
+{
+  "rss_defaults": {
+    "language": "en",
+    "request_timeout_seconds": 12,
+    "request_delay_seconds": 0.25
+  },
+  "sources": [
+    {
+      "name": "BBC World",
+      "category": "diplomacy",
+      "urls": [
+        "https://feeds.bbci.co.uk/news/world/rss.xml"
+      ]
+    },
+    {
+      "name": "Al Jazeera English",
+      "category": "diplomacy",
+      "urls": [
+        "https://www.aljazeera.com/xml/rss/all.xml"
+      ]
+    },
+    {
+      "name": "UN News",
+      "category": "diplomacy",
+      "urls": [
+        "https://news.un.org/feed/subscribe/en/news/all/rss.xml"
+      ]
+    },
+    {
+      "name": "IMF News",
+      "category": "markets",
+      "urls": [
+        "https://www.imf.org/en/News/RSS"
+      ]
+    },
+    {
+      "name": "World Bank News",
+      "category": "markets",
+      "urls": [
+        "https://search.worldbank.org/api/v2/news?format=atom"
+      ]
+    },
+    {
+      "name": "AfDB News",
+      "category": "markets",
+      "urls": [
+        "https://www.afdb.org/en/rss-feeds/news-events"
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -131,7 +131,7 @@ function formatChange(changePct: number | null): string {
     return "N/A";
   }
   const positive = changePct > 0;
-  const arrow = positive ? "▲" : changePct < 0 ? "▼" : "•";
+  const arrow = positive ? "+" : changePct < 0 ? "-" : "~";
   return `${arrow} ${positive ? "+" : ""}${changePct.toFixed(2)}%`;
 }
 
@@ -181,3 +181,4 @@ function PanelError({ message, dense }: { message: string; dense: boolean }) {
     </Panel>
   );
 }
+
