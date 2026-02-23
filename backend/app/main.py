@@ -19,6 +19,7 @@ from app.data.event_store import EventStore
 from app.jobs import EventIngestionService
 from app.market_service import MarketService
 from app.news_service import NewsService
+from app.prediction_market_service import PredictionMarketService
 from app.video_service import VideoService
 from app.watchlist_service import WatchlistService
 
@@ -29,6 +30,7 @@ EVENT_DB_PATH = Path(__file__).resolve().parent / "data" / "world_monitor.db"
 
 news_service = NewsService(config_path=NEWS_CONFIG_PATH)
 market_service = MarketService()
+prediction_market_service = PredictionMarketService()
 video_service = VideoService()
 watchlist_service = WatchlistService(storage_path=WATCHLIST_PATH)
 event_store = EventStore(db_path=EVENT_DB_PATH)
@@ -52,6 +54,7 @@ async def lifespan(_: FastAPI):
     await news_service.start()
     await ingestion_service.start()
     market_service.refresh_async(force=True)
+    prediction_market_service.refresh_async(force=True)
     video_service.refresh_async(force=True)
     try:
         yield
@@ -119,6 +122,11 @@ def get_markets_history(
     )
 ) -> dict:
     return market_service.get_market_history(range_key=range_key)
+
+
+@app.get("/prediction-markets")
+def get_prediction_markets(refresh: int = Query(default=0, ge=0, le=1)) -> dict[str, Any]:
+    return prediction_market_service.get_markets(force_refresh=bool(refresh))
 
 
 @app.get("/watchlist")
