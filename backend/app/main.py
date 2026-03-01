@@ -129,6 +129,11 @@ def get_prediction_markets(refresh: int = Query(default=0, ge=0, le=1)) -> dict[
     return prediction_market_service.get_markets(force_refresh=bool(refresh))
 
 
+@app.get("/prediction-markets/status")
+def get_prediction_markets_status() -> dict[str, Any]:
+    return prediction_market_service.get_status()
+
+
 @app.get("/watchlist")
 def get_watchlist() -> dict[str, list[str]]:
     return watchlist_service.get_watchlist()

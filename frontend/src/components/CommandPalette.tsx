@@ -59,6 +59,17 @@ export default function CommandPalette() {
     if (command.startsWith("go ")) {
       const target = raw.slice(3).trim();
       if (target) {
+        const normalizedTarget = target.toLowerCase();
+        if (
+          normalizedTarget === "prediction markets" ||
+          normalizedTarget === "predictions" ||
+          normalizedTarget === "polymarket" ||
+          normalizedTarget === "kalshi"
+        ) {
+          router.push("/prediction-markets");
+          setLastResult("Opening prediction markets.");
+          return;
+        }
         setSearchQuery(target);
         router.push("/dashboard");
         setLastResult(`Focused on ${target}.`);

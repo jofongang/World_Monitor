@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 import json
 import logging
 import os
@@ -46,7 +47,10 @@ class PredictionMarketService:
         self._cached_at = 0.0
 
     def get_markets(self, force_refresh: bool = False) -> dict[str, Any]:
-        if force_refresh:
+        with self._state_lock:
+            has_cache = bool(self._cache)
+
+        if force_refresh or not has_cache:
             self.refresh(force=True)
         else:
             self._refresh_if_stale()
@@ -56,6 +60,26 @@ class PredictionMarketService:
                 "items": [dict(item) for item in self._cache],
                 "sources": [dict(source) for source in self._sources],
                 "last_updated": self._last_updated,
+            }
+
+    def get_status(self) -> dict[str, Any]:
+        with self._state_lock:
+            has_cache = bool(self._cache)
+
+        if not has_cache:
+            self.refresh(force=True)
+        else:
+            self._refresh_if_stale()
+
+        with self._state_lock:
+            active_markets = sum(1 for item in self._cache if _is_active_status(item.get("status")))
+            return {
+                "active_markets": active_markets,
+                "total_markets": len(self._cache),
+                "healthy_sources": sum(1 for source in self._sources if source.get("ok")),
+                "total_sources": len(self._sources),
+                "last_updated": self._last_updated,
+                "sources": [dict(source) for source in self._sources],
             }
 
     def refresh_async(self, force: bool = False) -> None:
@@ -89,26 +113,29 @@ class PredictionMarketService:
             aggregated: list[dict[str, Any]] = []
             source_rows: list[dict[str, Any]] = []
 
-            poly_items, poly_error = self._fetch_polymarket()
-            aggregated.extend(poly_items)
-            source_rows.append(
-                {
-                    "name": "Polymarket",
-                    "ok": poly_error is None,
-                    "fetched": len(poly_items),
-                    "last_error": poly_error,
-                }
-            )
+            with ThreadPoolExecutor(max_workers=2) as executor:
+                poly_future = executor.submit(self._fetch_polymarket)
+                kalshi_future = executor.submit(self._fetch_kalshi)
+                poly_items, poly_error = poly_future.result()
+                kalshi_items, kalshi_error = kalshi_future.result()
 
-            kalshi_items, kalshi_error = self._fetch_kalshi()
+            aggregated.extend(poly_items)
             aggregated.extend(kalshi_items)
-            source_rows.append(
-                {
-                    "name": "Kalshi",
-                    "ok": kalshi_error is None,
-                    "fetched": len(kalshi_items),
-                    "last_error": kalshi_error,
-                }
+            source_rows.extend(
+                [
+                    {
+                        "name": "Polymarket",
+                        "ok": poly_error is None,
+                        "fetched": len(poly_items),
+                        "last_error": poly_error,
+                    },
+                    {
+                        "name": "Kalshi",
+                        "ok": kalshi_error is None,
+                        "fetched": len(kalshi_items),
+                        "last_error": kalshi_error,
+                    },
+                ]
             )
 
             aggregated.sort(
@@ -195,6 +222,11 @@ class PredictionMarketService:
                         "ticker": slug or market_id,
                         "title": title,
                         "subtitle": str(raw.get("category", "")).strip() or None,
+                        "category": _classify_market(
+                            title=title,
+                            subtitle=str(raw.get("category", "")).strip(),
+                            ticker=slug or market_id,
+                        ),
                         "url": url or None,
                         "status": status,
                         "yes_price": _round2(yes_price),
@@ -265,6 +297,11 @@ class PredictionMarketService:
                         "ticker": ticker or None,
                         "title": title,
                         "subtitle": str(raw.get("subtitle", "")).strip() or None,
+                        "category": _classify_market(
+                            title=title,
+                            subtitle=str(raw.get("subtitle", "")).strip(),
+                            ticker=ticker,
+                        ),
                         "url": f"https://kalshi.com/markets/{ticker}" if ticker else None,
                         "status": status,
                         "yes_price": _as_percent(yes_price),
@@ -402,3 +439,23 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace(
         "+00:00", "Z"
     )
+
+
+def _classify_market(*, title: str, subtitle: str, ticker: str | None) -> str:
+    text = " ".join(part for part in [title, subtitle, ticker or ""] if part).lower()
+    if any(term in text for term in ("nba", "nfl", "mlb", "soccer", "sport", "game", "vs ", "match", "wins by", "points scored")):
+        return "sports"
+    if any(term in text for term in ("bitcoin", "btc", "ethereum", "eth", "solana", "crypto", "dogecoin")):
+        return "crypto"
+    if any(term in text for term in ("inflation", "fed", "rate", "recession", "cpi", "gdp", "payroll", "treasury", "oil", "gold", "economy")):
+        return "macro"
+    if any(term in text for term in ("trump", "biden", "election", "senate", "house", "president", "prime minister", "parliament", "mayor", "governor", "politic")):
+        return "politics"
+    if any(term in text for term in ("war", "ukraine", "russia", "china", "taiwan", "israel", "gaza", "iran", "tariff", "ceasefire", "treaty")):
+        return "world"
+    return "other"
+
+
+def _is_active_status(value: Any) -> bool:
+    text = str(value).strip().lower()
+    return text in {"active", "open", "initialized"}

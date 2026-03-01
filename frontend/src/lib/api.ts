@@ -40,6 +40,48 @@ export interface MarketItem {
   error: string | null;
 }
 
+export interface PredictionMarketItem {
+  id: string;
+  provider: "Polymarket" | "Kalshi" | string;
+  ticker: string | null;
+  title: string;
+  subtitle: string | null;
+  category: string;
+  url: string | null;
+  status: string;
+  yes_price: number | null;
+  no_price: number | null;
+  last_price: number | null;
+  volume_24h: number | null;
+  volume_total: number | null;
+  liquidity: number | null;
+  open_interest: number | null;
+  close_time: string | null;
+  updated_at: string;
+}
+
+export interface PredictionMarketSourceStatus {
+  name: string;
+  ok: boolean;
+  fetched: number;
+  last_error: string | null;
+}
+
+export interface PredictionMarketsResponse {
+  items: PredictionMarketItem[];
+  sources: PredictionMarketSourceStatus[];
+  last_updated: string | null;
+}
+
+export interface PredictionMarketStatusResponse {
+  active_markets: number;
+  total_markets: number;
+  healthy_sources: number;
+  total_sources: number;
+  last_updated: string | null;
+  sources: PredictionMarketSourceStatus[];
+}
+
 export type MarketHistoryRange = "24h" | "7d" | "1m" | "6m" | "1y" | "5y";
 
 export interface MarketHistoryPoint {
@@ -329,6 +371,17 @@ export async function fetchVideos(options?: {
 
 export async function fetchMarkets(): Promise<MarketItem[]> {
   return fetchApi("/markets");
+}
+
+export async function fetchPredictionMarkets(options?: {
+  refresh?: boolean;
+}): Promise<PredictionMarketsResponse> {
+  const query = options?.refresh ? "?refresh=1" : "";
+  return fetchApi(`/prediction-markets${query}`);
+}
+
+export async function fetchPredictionMarketStatus(): Promise<PredictionMarketStatusResponse> {
+  return fetchApi("/prediction-markets/status");
 }
 
 export async function fetchMarketHistory(

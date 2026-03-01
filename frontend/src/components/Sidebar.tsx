@@ -13,7 +13,8 @@ const NAV_ITEMS = [
   { href: "/health", label: "Health", icon: "07" },
   { href: "/brief", label: "Daily Brief", icon: "08" },
   { href: "/markets", label: "Markets", icon: "09" },
-  { href: "/videos", label: "Video Wall", icon: "10" },
+  { href: "/prediction-markets", label: "Prediction Mkts", icon: "10" },
+  { href: "/videos", label: "Video Wall", icon: "11" },
 ] as const;
 
 export default function Sidebar() {

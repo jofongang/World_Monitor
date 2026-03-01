@@ -35,6 +35,7 @@ Copy-Item .env.example .env.local -ErrorAction SilentlyContinue
 - Alerts: `http://localhost:3000/alerts`
 - Sources: `http://localhost:3000/sources`
 - Health: `http://localhost:3000/health`
+- Prediction Markets: `http://localhost:3000/prediction-markets`
 - Backend health: `http://localhost:8000/health`
 
 ## New Backend APIs
@@ -57,6 +58,8 @@ Copy-Item .env.example .env.local -ErrorAction SilentlyContinue
 
 Existing APIs remain available:
 - `/news`, `/markets`, `/videos`, `/watchlist`, `/alerts`, `/brief`, `/health`
+- `/prediction-markets`
+- `/prediction-markets/status`
 
 ## Environment Variables
 
@@ -76,6 +79,12 @@ Backend:
   - `ACLED_API_KEY`
   - `ACLED_EMAIL`
   - `ALPHA_VANTAGE_API_KEY`
+- Prediction markets:
+  - `PREDICTION_CACHE_SECONDS` (default `120`)
+  - `PREDICTION_FETCH_TIMEOUT_SECONDS` (default `12`)
+  - `PREDICTION_MAX_ITEMS_PER_SOURCE` (default `80`)
+  - `POLYMARKET_API_URL` (default Polymarket gamma markets endpoint)
+  - `KALSHI_API_URL` (default Kalshi elections markets endpoint)
 
 ## RSS Source Configuration
 
